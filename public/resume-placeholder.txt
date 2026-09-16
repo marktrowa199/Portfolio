@@ -1,0 +1,8 @@
+[RESUME PDF PLACEHOLDER]
+Name: [Your Name]
+Degree: Bachelor of Science in Information Technology (BSIT)
+Target Roles: Junior Developer / Software Developer / Associate Software Engineer
+Core Stack: Python, SQL, Flask, JavaScript, HTML5/CSS3
+Contact: [Email Address] | [LinkedIn URL] | [GitHub URL]
+
+Replace this file with your actual Resume PDF (e.g., 'resume.pdf') in the /public directory.
