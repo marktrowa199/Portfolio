@@ -36,7 +36,7 @@
 
 .light {
   /* Clean, soft background */
-  --bg-main: #F6F1E8;
+  --bg-main: #FBF8F2;
 
   /* White elevated surfaces */
   --bg-card: #FFFFFF;
@@ -154,9 +154,9 @@ h6 {
   color: #64FFDA;
 }
 
-.light ::selection {
-  background: rgba(15, 118, 110, 0.15);
-  color: #0F766E;
+html.light ::selection {
+  background: #DCCEBB;
+  color: #292722;
 }
 
 /* ==========================================================================
@@ -231,6 +231,79 @@ h6 {
 
 .light body {
   background-color: var(--bg-main);
+}
+
+/* Keep the fixed navbar readable when its scrolled state is active. */
+html.light .site-navbar.is-scrolled {
+  background-color: rgb(251 248 242 / 92%) !important;
+  border-color: #DED5C8 !important;
+}
+
+html.light .site-navbar .text-slate-lightest {
+  color: #292722 !important;
+}
+
+html.light .site-navbar .text-slate-light,
+html.light .site-navbar .text-slate-muted {
+  color: #4F4A43 !important;
+}
+
+html.light .mobile-nav-panel,
+html.light .resume-modal {
+  background-color: #FBF8F2 !important;
+  color: #292722 !important;
+}
+
+html.light .resume-modal-overlay {
+  background-color: rgb(41 39 34 / 28%) !important;
+}
+
+/* Replace leftover navy surfaces with soft light-theme surfaces. */
+html.light [class~="bg-navy-950\/60"],
+html.light [class~="bg-navy-950"] {
+  background-color: #F3EEE5 !important;
+}
+
+html.light [class~="bg-navy-900\/90"],
+html.light [class~="bg-navy-900\/80"],
+html.light [class~="bg-navy-900\/70"],
+html.light [class~="bg-navy-900\/60"],
+html.light [class~="bg-navy-900\/50"],
+html.light [class~="bg-navy-900\/40"],
+html.light [class~="bg-navy-900\/30"],
+html.light [class~="bg-navy-900"] {
+  background-color: #F7F3EC !important;
+}
+
+html.light [class~="bg-navy-800\/80"],
+html.light [class~="bg-navy-800\/60"],
+html.light [class~="bg-navy-800\/50"],
+html.light [class~="bg-navy-800\/40"],
+html.light [class~="bg-navy-800"] {
+  background-color: #FFFFFF !important;
+}
+
+/* Normalize shared dark-theme text utilities for the light theme. */
+html.light .text-slate-lightest {
+  color: #292722 !important;
+}
+
+html.light .text-slate-light {
+  color: #3D3A35 !important;
+}
+
+html.light .text-slate-muted {
+  color: #4F4A43 !important;
+}
+
+html.light .text-slate-dim,
+html.light .text-slate-700 {
+  color: #625C53 !important;
+}
+
+html.light .text-slate-500,
+html.light .text-slate-400 {
+  color: #746D62 !important;
 }
 
 /* Keep small light-mode labels readable on the cream canvas. */

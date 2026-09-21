@@ -63,7 +63,10 @@ export default function Footer() {
         {/* Disclaimer / Note */}
         <div className="mt-8 pt-6 border-t border-navy-700/30 dark:border-navy-700/30 light:border-slate-200/60 text-center font-mono text-[11px] text-slate-dim light:text-slate-500">
           <p>
-            Designed &amp; engineered for Niel Arthur B. Rocacurva • BSIT Graduate, Our Lady of Fatima University.
+            Built and designed by Niel Arthur B. Rocacurva.
+          </p>
+          <p>
+            All rights reserved. © 2026.
           </p>
         </div>
       </div>
