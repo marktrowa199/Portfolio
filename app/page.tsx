@@ -3,6 +3,7 @@ import Hero from "@/components/hero/Hero";
 import About from "@/components/about/About";
 import SkillsBento from "@/components/skills/SkillsBento";
 import Projects from "@/components/projects/Projects";
+import WorkProcess from "@/components/process/WorkProcess";
 import Timeline from "@/components/timeline/Timeline";
 import Contact from "@/components/contact/Contact";
 import Footer from "@/components/footer/Footer";
