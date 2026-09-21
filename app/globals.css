@@ -7,50 +7,71 @@
    ========================================================================== */
 
 :root {
-  /* DARK THEME (DEFAULT #0A192F UNTOUCHED) */
+  /* DARK THEME */
   --bg-main: #0A192F;
   --bg-card: #112240;
   --bg-card-hover: #162c52;
   --bg-inset: #050c18;
   --border-card: #233554;
   --border-card-hover: #64FFDA;
+
   --text-main: #CCD6F6;
   --text-heading: #F1F5F9;
   --text-muted: #8892B0;
   --text-dim: #64748B;
+
   --accent-cyan: #64FFDA;
   --accent-blue: #57CBFF;
+
   --badge-bg: rgba(100, 255, 218, 0.08);
   --badge-border: rgba(100, 255, 218, 0.2);
+
   --shadow-card: 0 10px 30px -15px rgba(2, 12, 27, 0.7);
   --shadow-card-hover: 0 20px 30px -15px rgba(2, 12, 27, 0.9);
 }
 
 /* ==========================================================================
-   DEDICATED LIGHT MODE DESIGN SYSTEM
-   Modify these tokens to adjust light-mode appearance globally
+   LIGHT THEME
    ========================================================================== */
-.light {
-  --bg-main: #F6F7F9;           /* Soft warm-gray / off-white background */
-  --bg-card: #FFFFFF;           /* Crisp elevated white card surface */
-  --bg-card-hover: #FAFBFC;      /* Subtle hover surface tint */
-  --bg-inset: #EEF1F6;          /* Code blocks, tags, and inset pills */
-  --border-card: #E2E6EC;       /* Subtle low-contrast hairline border */
-  --border-card-hover: #0F766E; /* Active accent border highlight */
-  --text-main: #1E2530;         /* Deep charcoal body text (replaces pure black) */
-  --text-heading: #111620;      /* Rich dark charcoal headings */
-  --text-muted: #525E72;        /* Warm muted slate body text (6.5:1 ratio) */
-  --text-dim: #7B879C;          /* Secondary metadata, subtitles, labels */
-  --accent-cyan: #0F766E;       /* Deep refined teal (WCAG AA compliant) */
-  --accent-blue: #0284C7;       /* Signal blue secondary */
-  --badge-bg: #E6F4F2;          /* Light teal tinted badge background */
-  --badge-border: #B2DFDB;      /* Subtle teal badge border */
-  --shadow-card: 0 2px 14px -2px rgba(17, 24, 39, 0.04), 0 1px 3px 0 rgba(17, 24, 39, 0.02);
-  --shadow-card-hover: 0 12px 28px -6px rgba(17, 24, 39, 0.07), 0 4px 10px -2px rgba(17, 24, 39, 0.03);
-}
 
+.light {
+  /* Clean, soft background */
+  --bg-main: #F6F1E8;
+
+  /* White elevated surfaces */
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8FAFC;
+
+  /* Soft inset areas */
+  --bg-inset: #EAF0F6;
+
+  /* Neutral borders */
+  --border-card: #D8E0EA;
+  --border-card-hover: #0E7490;
+
+  /* Text */
+  --text-main: #3D3A35;
+  --text-heading: #292722;
+  --text-muted: #5E584F;
+  --text-dim: #746D62;
+
+  /* Blue/teal accents that connect with Dark Mode */
+  --accent-cyan: #0E7490;
+  --accent-blue: #0369A1;
+
+  /* Badges */
+  --badge-bg: #E6F4F7;
+  --badge-border: #B7DCE5;
+
+  /* Soft shadows */
+  --shadow-card:
+    0 2px 8px rgba(15, 23, 42, 0.04);
+
+  --shadow-card-hover:
+    0 8px 20px rgba(15, 23, 42, 0.08);
+}
 /* ==========================================================================
-   BASE & TYPOGRAPHY CONFIGURATION (POPPINS ROUNDED GEOMETRIC)
+   BASE
    ========================================================================== */
 
 html {
@@ -60,20 +81,39 @@ html {
 body {
   background-color: var(--bg-main);
   color: var(--text-main);
-  font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  font-family:
+    var(--font-poppins),
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+
   letter-spacing: -0.01em;
 }
 
-/* Heading weights */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-poppins), sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family:
+    var(--font-poppins),
+    sans-serif;
+
   letter-spacing: -0.02em;
 }
 
 /* ==========================================================================
-   SCROLLBAR & SELECTION STYLING
+   SCROLLBAR
    ========================================================================== */
 
 ::-webkit-scrollbar {
@@ -85,7 +125,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .light ::-webkit-scrollbar-track {
-  background: #F6F7F9;
+  background: #EEE8DC;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -99,12 +139,15 @@ h1, h2, h3, h4, h5, h6 {
 
 .light ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
-  border-radius: 4px;
 }
 
 .light ::-webkit-scrollbar-thumb:hover {
   background: #0F766E;
 }
+
+/* ==========================================================================
+   TEXT SELECTION
+   ========================================================================== */
 
 ::selection {
   background: rgba(100, 255, 218, 0.25);
@@ -117,27 +160,54 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================================================
-   BACKGROUND PATTERNS & MICRO-INTERACTIONS
+   BACKGROUND PATTERN
    ========================================================================== */
 
-/* Subtle Grid Background Pattern */
+/*
+  DARK MODE ONLY
+
+  Keep the technical grid in Dark Mode.
+*/
+
 .bg-grid-pattern {
   background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, rgba(35, 53, 84, 0.25) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(35, 53, 84, 0.25) 1px, transparent 1px);
+
+  background-image:
+    linear-gradient(
+      to right,
+      rgba(35, 53, 84, 0.25) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(35, 53, 84, 0.25) 1px,
+      transparent 1px
+    );
 }
+
+/*
+  LIGHT MODE
+
+  Completely remove the grid.
+*/
 
 .light .bg-grid-pattern {
-  background-image: 
-    linear-gradient(to right, rgba(226, 230, 236, 0.85) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(226, 230, 236, 0.85) 1px, transparent 1px);
+  background-image: none !important;
+  background-size: auto;
 }
 
-/* Micro-interaction card elevation & glow */
+/* ==========================================================================
+   CARD EFFECT
+   ========================================================================== */
+
 .card-glow-hover {
   position: relative;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+
+  transition:
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease;
+
   box-shadow: var(--shadow-card);
 }
 
@@ -146,12 +216,44 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--shadow-card-hover);
 }
 
-/* Accessibility: Reduced Motion */
+/* ==========================================================================
+   LIGHT MODE CLEANUP
+   ========================================================================== */
+
+/*
+  Prevent accidental decorative backgrounds from making
+  Light Mode visually harsh.
+*/
+
+.light {
+  background-color: var(--bg-main);
+}
+
+.light body {
+  background-color: var(--bg-main);
+}
+
+/* Keep small light-mode labels readable on the cream canvas. */
+.light [class~="light:text-[#525E72]"],
+.light [class~="light:text-slate-600"] {
+  color: #4F4A43 !important;
+}
+
+.light [class~="light:text-[#7B879C]"],
+.light [class~="light:text-slate-500"],
+.light [class~="light:text-slate-400"] {
+  color: #625C53 !important;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  
+
   *,
   *::before,
   *::after {
