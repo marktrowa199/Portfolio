@@ -117,20 +117,20 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .about-detail-list h3 { font-size: .92rem; font-weight: 650; }
 .about-detail-list p { margin-top: .25rem; color: var(--text-muted); font-size: .86rem; line-height: 1.55; }
 
-.skill-wall { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+.skill-wall { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; align-items: start; }
 .skill-module { --module-color: var(--brick-blue); overflow: hidden; border: 1px solid var(--border); border-radius: 11px; background: var(--bg-raised); box-shadow: var(--shadow-block); }
 .skill-module--yellow { --module-color: var(--brick-yellow); }
 .skill-module--red { --module-color: var(--brick-red); }
 .skill-module--green { --module-color: var(--brick-green); }
-.skill-module__header { min-height: 3rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--border); padding: .8rem .1rem; color: var(--module-color); }
-.skill-module__header h3 { color: var(--text-heading); font-size: 1rem; font-weight: 650; letter-spacing: -.02em; }
-.skill-module__items { display: flex; flex-wrap: wrap; gap: .45rem; padding: .9rem 0; }
-.skill-module__subtitle { padding: .65rem .9rem 0; color: var(--text-muted); font-size: .85rem; line-height: 1.45; }
-.skill-module__items { display: grid; grid-template-columns: 1fr; }
-.skill-module__items li { display: grid; gap: .22rem; border-bottom: 1px solid var(--border); padding: .7rem .1rem; color: var(--text-main); font-size: .9rem; line-height: 1.45; }
-.skill-module__name { font-weight: 600; }
-.skill-module__tag { color: var(--module-color); font-size: .8rem; font-weight: 600; }
-.skill-module__note { color: var(--text-muted); font-size: .86rem; line-height: 1.5; }
+.skill-module { padding: 1.2rem clamp(1rem, 2vw, 1.5rem) .65rem; }
+.skill-module__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 0 0 .85rem; color: var(--module-color); }
+.skill-module__header h3 { min-width: 0; color: var(--text-heading); font-size: 1.05rem; font-weight: 650; letter-spacing: -.02em; line-height: 1.35; }
+.skill-module__subtitle { color: var(--text-muted); font-size: .88rem; line-height: 1.55; }
+.skill-module__items { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: .45rem; }
+.skill-module__items li { display: grid; min-width: 0; gap: .3rem; border-top: 1px solid var(--border); padding: .85rem 0; color: var(--text-main); font-size: .92rem; line-height: 1.5; }
+.skill-module__name { overflow-wrap: anywhere; font-weight: 600; line-height: 1.4; }
+.skill-module__tag { width: fit-content; max-width: 100%; border-radius: 4px; background: var(--bg-soft); padding: .16rem .45rem; color: var(--module-color); font-size: .77rem; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
+.skill-module__note { color: var(--text-muted); font-size: .88rem; line-height: 1.6; overflow-wrap: anywhere; }
 
 .journey-bricks { display: grid; gap: .75rem; }
 .journey-brick { --journey-color: var(--brick-blue); display: grid; grid-template-columns: minmax(6.4rem, .38fr) 1fr; gap: .9rem; align-items: stretch; }
@@ -173,6 +173,9 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .project-tech-list { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .6rem; padding: 0; list-style: none; }
 .project-technology { display: inline-flex; min-height: 2rem; align-items: center; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .32rem .65rem; color: var(--text-main); font-size: .85rem; }
 .project-block__link-placeholder { color: var(--text-dim); font-size: .85rem; }
+.project-block__actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+.project-demo-link { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: .5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .65rem .9rem; color: var(--text-heading); font-size: .88rem; font-weight: 600; line-height: 1.3; text-decoration: none; transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease; }
+.project-demo-link:hover { border-color: var(--accent); background: var(--bg-raised); color: var(--accent); }
 
 @media (max-width: 640px) {
   .section-wrap { width: min(100% - 2rem, 76rem); }
@@ -187,7 +190,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .journey-company__logo { width: 8rem; min-height: 3rem; }
 }
 
-@media (min-width: 640px) {
+@media (min-width: 960px) {
   .skill-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 

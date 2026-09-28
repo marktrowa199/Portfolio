@@ -8,6 +8,7 @@ type Project = {
   contribution?: string;
   features?: string[];
   technologies?: string[];
+  demoUrl?: string;
   sourceNote?: string;
   featured?: boolean;
 };
@@ -32,50 +33,13 @@ const projects: Project[] = [
   {
     id: "jobup",
     title: "JobUp",
+    demoUrl: "https://job-up.vercel.app/",
     category: "AI · JOB SEARCH",
     summary: "AI-powered job application assistant / job search platform.",
     color: "yellow",
     sourceNote: "Further project details and a repository link aren’t available in the current source.",
   },
-  {
-    id: "netflix-analysis",
-    title: "Netflix Data Analysis",
-    category: "DATA · SQL",
-    summary: "SQL data analytics project using PostgreSQL.",
-    color: "red",
-    technologies: ["SQL", "PostgreSQL"],
-    sourceNote: "The dataset, query scope, contribution, results, and repository link aren’t documented here.",
-  },
-  {
-    id: "insightforge",
-    title: "InsightForge",
-    category: "DATA · ANALYSIS",
-    summary: "Dataset upload, cleaning, analysis, charts, and reports.",
-    color: "green",
-    sourceNote: "Further implementation details and a repository link aren’t available in the current source.",
-  },
-  {
-    id: "data-pipeline",
-    title: "Python & SQL Analytics Pipeline with OpenAI API",
-    category: "DATA · BACKEND",
-    summary: "Automated data cleaning, SQL query aggregation, and AI text synthesis.",
-    color: "blue",
-    context: "The repository describes a workflow for cleaning heterogeneous datasets, transforming them with relational SQL, and producing human-readable summaries.",
-    contribution: "Implemented relational SQL filtering, multi-table joins, and aggregates; used Pandas for missing values, anomaly handling, and type normalization; integrated OpenAI API for summaries. Related DataCamp Python Data Associate and SQL certifications are listed in credentials.",
-    features: ["Relational SQL filtering and multi-table joins.", "Pandas missing-value handling, anomaly detection, and type normalization.", "OpenAI API integration to generate natural-language summaries of data anomalies."],
-    technologies: ["Python", "SQL", "Pandas", "OpenAI API", "PostgreSQL"],
-  },
-  {
-    id: "it-ops-toolkit",
-    title: "IT Operations & Workstation Diagnostics Suite",
-    category: "SYSTEMS · AUTOMATION",
-    summary: "System deployment scripts, VPN verification, and workstation health diagnostics.",
-    color: "red",
-    context: "The repository describes reducing manual steps in workstation provisioning, VPN setup, and hardware health troubleshooting.",
-    contribution: "Developed operational scripts to check system configuration, audit device hardware, and verify secure VPN connectivity, drawing on enterprise IT support experience at Concentrix.",
-    features: ["System configuration checks, user profile setup, and VPN endpoint ping testing.", "Standardized hardware inventory logging for equipment lifecycle management.", "Diagnostic logging routines and issue documentation."],
-    technologies: ["PowerShell", "Python", "Windows", "Networking"],
-  },
+
 ];
 
 function ProjectBlock({ project }: { project: Project }) {
@@ -123,6 +87,13 @@ function ProjectBlock({ project }: { project: Project }) {
         )}
 
         {project.sourceNote && <p className="project-block__link-placeholder">{project.sourceNote}</p>}
+        {project.demoUrl && (
+          <div className="project-block__actions">
+            <a className="project-demo-link" href={project.demoUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${project.title} demo (opens in a new tab)`}>
+              View Demo
+            </a>
+          </div>
+        )}
       </div>
     </article>
   );

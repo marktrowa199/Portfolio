@@ -2,7 +2,19 @@ import Image from "next/image";
 import olfuLogo from "@/components/image/OLFU LOGO.jpg";
 import concentrixLogo from "@/components/image/concentrix-logo-trimmed.png";
 
-const milestones = [
+type Milestone = {
+  type: string;
+  date: string;
+  title: string;
+  place: string;
+  location: string;
+  color: "blue" | "green" | "yellow";
+  detail: string;
+  highlights: string[];
+  tags: string[];
+};
+
+const experience: Milestone[] = [
   {
     type: "Work Experience", date: "Feb. 2026 – April 2026", title: "IT Operations / IT Support Intern",
     place: "Concentrix", location: "Quezon City, Philippines", color: "blue",
@@ -29,6 +41,9 @@ const milestones = [
     ],
     tags: ["Raspberry Pi 5", "ESP32", "AI Model Training", "Motor Drivers", "Sensors", "Automated Spraying"],
   },
+];
+
+const education: Milestone[] = [
   {
     type: "Higher Education", date: "2022 – 2026", title: "Bachelor of Science in Information Technology (BSIT)",
     place: "Our Lady of Fatima University – Quezon City", location: "Quezon City, Philippines", color: "yellow",
@@ -42,47 +57,65 @@ const milestones = [
   },
 ];
 
+function MilestoneList({ items }: { items: Milestone[] }) {
+  return (
+    <ol className="journey-bricks">
+      {items.map((item) => (
+        <li key={item.type} className={`journey-brick journey-brick--${item.color}`}>
+          <div className="journey-brick__date">
+            <p>{item.date}</p>
+            <span>{item.type}</span>
+          </div>
+          <div className="journey-brick__content">
+            {item.type === "Work Experience" ? (
+              <div className="journey-company">
+                <span className="journey-company__logo">
+                  <Image src={concentrixLogo} alt="Concentrix logo" width={124} height={22} className="h-auto w-28 sm:w-32" />
+                </span>
+                <div className="min-w-0">
+                  <p className="journey-company__name">{item.place}</p>
+                  <h3>{item.title}</h3>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                {item.type === "Higher Education" && <Image src={olfuLogo} alt="Our Lady of Fatima University crest" width={44} height={44} className="h-11 w-11 shrink-0 rounded-md border border-[var(--border)] bg-white object-contain p-1" />}
+                <h3>{item.title}</h3>
+              </div>
+            )}
+            <p className="journey-brick__place">{item.type === "Work Experience" ? item.location : `${item.place} · ${item.location}`}</p>
+            <p className="journey-brick__detail">{item.detail}</p>
+            <ul className="journey-highlights">{item.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
+            <ul className="journey-tags" aria-label={`${item.type} topics`}>{item.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export default function Timeline() {
   return (
-    <section id="journey" className="section-space scroll-mt-20">
-      <div className="section-wrap grid gap-9 lg:grid-cols-[.7fr_1.3fr] lg:gap-16">
-        <div>
-          <h2 className="section-title">Experience, education, and the work between.</h2>
-          <p className="section-intro mt-4">A timeline of enterprise IT support, capstone robotics, and my degree at Our Lady of Fatima University.</p>
+    <>
+      <section id="journey" className="section-space scroll-mt-20">
+        <div className="section-wrap grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:gap-16">
+          <div>
+            <h2 className="section-title">Experience</h2>
+            <p className="section-intro mt-4">Professional experience and project work.</p>
+          </div>
+          <MilestoneList items={experience} />
         </div>
-        <ol className="journey-bricks">
-          {milestones.map((item) => (
-            <li key={item.type} className={`journey-brick journey-brick--${item.color}`}>
-              <div className="journey-brick__date">
-                <p>{item.date}</p>
-                <span>{item.type}</span>
-              </div>
-              <div className="journey-brick__content">
-                {item.type === "Work Experience" ? (
-                  <div className="journey-company">
-                    <span className="journey-company__logo">
-                      <Image src={concentrixLogo} alt="Concentrix logo" width={124} height={22} className="h-auto w-28 sm:w-32" />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="journey-company__name">{item.place}</p>
-                      <h3>{item.title}</h3>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3">
-                    {item.type === "Higher Education" && <Image src={olfuLogo} alt="Our Lady of Fatima University crest" width={44} height={44} className="h-11 w-11 shrink-0 rounded-md border border-[var(--border)] bg-white object-contain p-1" />}
-                    <h3>{item.title}</h3>
-                  </div>
-                )}
-                <p className="journey-brick__place">{item.type === "Work Experience" ? item.location : `${item.place} · ${item.location}`}</p>
-                <p className="journey-brick__detail">{item.detail}</p>
-                <ul className="journey-highlights">{item.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
-                <ul className="journey-tags" aria-label={`${item.type} topics`}>{item.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
+      </section>
+
+      <section id="education" className="section-space scroll-mt-20 border-t border-[var(--border)]">
+        <div className="section-wrap grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:gap-16">
+          <div>
+            <h2 className="section-title">Education</h2>
+            <p className="section-intro mt-4">Academic background.</p>
+          </div>
+          <MilestoneList items={education} />
+        </div>
+      </section>
+    </>
   );
 }

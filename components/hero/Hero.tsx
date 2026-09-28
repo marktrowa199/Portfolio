@@ -29,7 +29,7 @@ export default function Hero() {
             Aspiring Associate Software Engineer / Junior Developer
           </p>
           <p className="mt-2 text-base font-medium text-[var(--text-muted)] sm:text-lg">
-            Software · data · AI · IoT
+            Software · data · AI · IoT · Full Stack Developer
           </p>
           <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-[var(--text-muted)]">
             Motivated BSIT graduate from Our Lady of Fatima University seeking to apply my skills in Python, SQL, Git, and software development while contributing to engineering solutions and growing as a software engineer.
