@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Niel Arthur B. Rocacurva | Associate Software Engineer & BSIT Graduate",
-  description: "Portfolio of Niel Arthur B. Rocacurva - BSIT graduate from Our Lady of Fatima University, skilled in Python, SQL, Git, IoT robotics, and enterprise IT operations.",
+  description: "Niel Arthur Rocacurva is a BSIT graduate focused on software engineering, data, and IoT, with project experience in agricultural robotics and Python and SQL workflows.",
   keywords: [
     "Niel Arthur Rocacurva",
     "Associate Software Engineer",
@@ -31,7 +31,11 @@ export const metadata: Metadata = {
     "Concentrix Intern",
   ],
   authors: [{ name: "Niel Arthur B. Rocacurva" }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
@@ -60,7 +64,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${poppins.variable} ${jetbrainsMono.variable} font-sans antialiased min-h-screen selection:bg-cyan/20 selection:text-cyan`}
+        className={`${poppins.variable} ${jetbrainsMono.variable} font-sans antialiased min-h-screen`}
       >
         {children}
       </body>

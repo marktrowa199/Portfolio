@@ -2,167 +2,77 @@
 
 import { useState } from "react";
 import SignalCanvas from "./SignalCanvas";
-import { ArrowRight, Copy, Check, Github, Linkedin, Sparkles, GraduationCap, Server, MapPin } from "lucide-react";
+import { ArrowRight, Check, Copy, Github, GraduationCap, Linkedin, MapPin, Server } from "lucide-react";
 
 export default function Hero() {
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">("idle");
   const email = "arthurnielzz@gmail.com";
 
-  const copyEmail = () => {
-    navigator.clipboard.writeText(email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2200);
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopyState("copied");
+    } catch {
+      setCopyState("error");
+    }
+    window.setTimeout(() => setCopyState("idle"), 2400);
   };
 
   return (
-    <section className="relative min-h-[90vh] pt-28 pb-16 lg:pt-36 lg:pb-24 flex flex-col justify-center overflow-hidden bg-grid-pattern">
-      {/* Background glow circle */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full bg-cyan/5 dark:bg-cyan/5 light:bg-[#0F766E]/5 blur-[120px] pointer-events-none -z-10" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          {/* Left Column: Core Narrative (7 cols) */}
-          <div className="lg:col-span-7 space-y-6">
-            {/* Status Telemetry Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan/30 bg-cyan/10 text-cyan dark:text-cyan light:text-[#0F766E] light:bg-[#E6F4F2] light:border-[#B2DFDB] font-mono text-xs font-medium">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan light:bg-[#0F766E] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan light:bg-[#0F766E]"></span>
-              </span>
-              <span className="tracking-wide uppercase text-[11px]">
-                Open to Remote • On-site • Hybrid
-              </span>
-            </div>
-
-            {/* Main Headline */}
-            <div className="space-y-2">
-              <p className="font-mono text-xs sm:text-sm text-cyan dark:text-cyan light:text-[#0F766E] tracking-wider font-medium">
-                &gt; HELLO, WORLD! I AM
-              </p>
-              <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-lightest dark:text-slate-lightest light:text-[#111620] leading-[1.12]">
-                Niel Arthur <span className="text-cyan dark:text-cyan light:text-[#0F766E]">Rocacurva</span>
-              </h1>
-              <p className="font-heading text-xl sm:text-2xl text-slate-light dark:text-slate-light light:text-[#525E72] font-semibold">
-                Associate Software Engineer / Junior Developer
-              </p>
-            </div>
-
-            {/* Honest, Clear Value Narrative from Resume */}
-            <p className="text-base sm:text-lg text-slate-muted dark:text-slate-muted light:text-[#525E72] max-w-2xl leading-relaxed font-normal">
-              Motivated <strong className="text-slate-lightest dark:text-slate-lightest light:text-[#111620] font-semibold">BSIT graduate</strong> from Our Lady of Fatima University seeking to apply my skills in <span className="text-cyan dark:text-cyan light:text-[#0F766E] font-medium">Python</span>, <span className="text-cyan dark:text-cyan light:text-[#0F766E] font-medium">SQL</span>, <span className="text-cyan dark:text-cyan light:text-[#0F766E] font-medium">Git</span>, and software development while contributing to innovative engineering solutions and growing as a software engineer.
-            </p>
-
-            {/* CTAs & Quick Micro-interactions */}
-            <div className="flex flex-wrap items-center gap-3.5 pt-2">
-              <a
-                href="#projects"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-sans text-xs sm:text-sm font-semibold bg-cyan dark:bg-cyan light:bg-[#0F766E] text-navy-950 dark:text-navy-950 light:text-white hover:bg-cyan/90 dark:hover:bg-cyan/90 light:hover:bg-[#0D6B64] shadow-lg shadow-cyan/10 light:shadow-sm transition-all duration-200 group"
-              >
-                <span>Explore Projects</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
-
-              <button
-                onClick={copyEmail}
-                className="inline-flex items-center gap-2 px-4 py-3 rounded-xl font-mono text-xs sm:text-sm font-medium border border-navy-700 dark:border-navy-700 light:border-[#E2E6EC] bg-navy-800/80 dark:bg-navy-800/80 light:bg-white text-slate-light dark:text-slate-light light:text-[#1E2530] hover:border-cyan/50 hover:text-cyan dark:hover:text-cyan light:hover:border-[#0F766E]/40 light:hover:text-[#0F766E] light:shadow-sm transition-all duration-200"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-400 light:text-emerald-600" />
-                    <span className="text-emerald-400 light:text-emerald-600 font-medium">Email Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    <span>Copy {email}</span>
-                  </>
-                )}
-              </button>
-
-              <a
-                href="https://github.com/marktrowa199"
-                target="_blank"
-                rel="noreferrer"
-                className="p-3 rounded-xl border border-navy-700 dark:border-navy-700 light:border-[#E2E6EC] bg-navy-800/80 dark:bg-navy-800/80 light:bg-white text-slate-light dark:text-slate-light light:text-[#525E72] hover:text-cyan dark:hover:text-cyan light:hover:text-[#0F766E] hover:border-cyan/40 light:hover:border-[#0F766E]/40 light:shadow-sm transition-colors"
-                aria-label="GitHub Profile"
-              >
-                <Github className="w-4 h-4" />
-              </a>
-
-              <a
-                href="https://www.linkedin.com/in/niel-arthur-rocacurva-874876307/"
-                target="_blank"
-                rel="noreferrer"
-                className="p-3 rounded-xl border border-navy-700 dark:border-navy-700 light:border-[#E2E6EC] bg-navy-800/80 dark:bg-navy-800/80 light:bg-white text-slate-light dark:text-slate-light light:text-[#525E72] hover:text-cyan dark:hover:text-cyan light:hover:text-[#0284C7] hover:border-cyan/40 light:hover:border-[#0284C7]/40 light:shadow-sm transition-colors"
-                aria-label="LinkedIn Profile"
-              >
-                <Linkedin className="w-4 h-4 text-signal-blue light:text-[#0284C7]" />
-              </a>
-            </div>
+    <section id="home" className="hero-build relative isolate flex flex-col justify-center py-28 sm:py-32">
+      <div className="section-wrap grid w-full items-center gap-10 lg:grid-cols-[.92fr_1.08fr] lg:gap-14">
+        <div className="max-w-2xl">
+          <h1 className="text-[clamp(2.6rem,4.9vw,4.5rem)] font-semibold leading-[1.04] tracking-[-.03em]">
+            Niel Arthur <span className="text-[var(--accent)]">B. Rocacurva</span>
+          </h1>
+          <p className="mt-5 text-xl font-semibold leading-snug text-[var(--text-heading)] sm:text-2xl">
+            Aspiring Associate Software Engineer / Junior Developer
+          </p>
+          <p className="mt-2 text-base font-medium text-[var(--text-muted)] sm:text-lg">
+            Software · data · AI · IoT
+          </p>
+          <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-[var(--text-muted)]">
+            Motivated BSIT graduate from Our Lady of Fatima University seeking to apply my skills in Python, SQL, Git, and software development while contributing to engineering solutions and growing as a software engineer.
+          </p>
+          <div className="mt-7 flex flex-wrap items-center gap-3">
+            <a href="#projects" className="inline-flex min-h-12 items-center gap-2 rounded-md bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-ink)] shadow-[0_4px_10px_-6px_rgb(0_0_0_/_45%)] transition hover:-translate-y-0.5 hover:bg-[var(--accent-strong)]">
+              Explore projects <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </a>
+            <a href="#contact" className="inline-flex min-h-12 items-center rounded-md border border-[var(--border)] bg-[var(--bg-raised)] px-5 py-3 text-sm font-semibold text-[var(--text-heading)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]">
+              Contact me
+            </a>
+            <button type="button" onClick={copyEmail} className="inline-flex min-h-12 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-[var(--text-muted)] transition hover:text-[var(--accent)]" aria-live="polite">
+              {copyState === "copied" ? <Check aria-hidden="true" className="h-4 w-4" /> : <Copy aria-hidden="true" className="h-4 w-4" />}
+              <span>{copyState === "copied" ? "Email copied" : copyState === "error" ? "Copy unavailable" : "Copy email"}</span>
+            </button>
           </div>
-
-          {/* Right Column: Signature Visual Motif (5 cols) */}
-          <div className="lg:col-span-5 w-full">
-            <SignalCanvas />
+          <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[var(--border)] pt-5 text-sm text-[var(--text-muted)]">
+            <a className="inline-flex min-h-11 items-center gap-2 hover:text-[var(--accent)]" href="https://github.com/marktrowa199" target="_blank" rel="noreferrer" aria-label="GitHub profile (opens in a new tab)">
+              <Github aria-hidden="true" className="h-4 w-4" /> GitHub
+            </a>
+            <a className="inline-flex min-h-11 items-center gap-2 hover:text-[var(--accent)]" href="https://www.linkedin.com/in/niel-arthur-rocacurva-874876307/" target="_blank" rel="noreferrer" aria-label="LinkedIn profile (opens in a new tab)">
+              <Linkedin aria-hidden="true" className="h-4 w-4" /> LinkedIn
+            </a>
+            <span className="text-[var(--text-dim)]">San Jose Del Monte Bulacan</span>
           </div>
         </div>
-
-        {/* Recruiter 10-Second Fast-Scan Strip */}
-        <div className="mt-14 pt-8 border-t border-navy-700/60 dark:border-navy-700/60 light:border-[#E2E6EC]">
-          <div className="flex items-center gap-2 mb-4 font-mono text-xs uppercase tracking-wider text-slate-dim light:text-[#7B879C]">
-            <Sparkles className="w-3.5 h-3.5 text-cyan light:text-[#0F766E]" />
-            <span>Recruiter Quick-Scan // Verified Profile</span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Card 1 */}
-            <div className="p-4 rounded-xl border border-navy-700/70 dark:border-navy-700/70 light:border-[#E2E6EC] bg-navy-800/40 dark:bg-navy-800/40 light:bg-white card-glow-hover">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-lg bg-navy-900/80 dark:bg-navy-900/80 light:bg-[#EEF1F6] text-cyan dark:text-cyan light:text-[#0F766E] border border-navy-700/50 light:border-[#E2E6EC]">
-                  <GraduationCap className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-mono text-slate-muted light:text-[#7B879C] uppercase">Degree</p>
-                  <p className="text-sm font-heading font-semibold text-slate-lightest dark:text-slate-lightest light:text-[#111620]">
-                    B.S. Information Technology
-                  </p>
-                  <p className="text-xs text-slate-muted light:text-[#525E72]">Our Lady of Fatima University (2022 - 2026)</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2 */}
-            <div className="p-4 rounded-xl border border-navy-700/70 dark:border-navy-700/70 light:border-[#E2E6EC] bg-navy-800/40 dark:bg-navy-800/40 light:bg-white card-glow-hover">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-lg bg-navy-900/80 dark:bg-navy-900/80 light:bg-[#EEF1F6] text-signal-blue light:text-[#0284C7] border border-navy-700/50 light:border-[#E2E6EC]">
-                  <Server className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-mono text-slate-muted light:text-[#7B879C] uppercase">Core Stack</p>
-                  <p className="text-sm font-heading font-semibold text-slate-lightest dark:text-slate-lightest light:text-[#111620]">
-                    Python, SQL, Git
-                  </p>
-                  <p className="text-xs text-slate-muted light:text-[#525E72]">Raspberry Pi 5, ESP32, IT Operations</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="p-4 rounded-xl border border-navy-700/70 dark:border-navy-700/70 light:border-[#E2E6EC] bg-navy-800/40 dark:bg-navy-800/40 light:bg-white card-glow-hover">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-lg bg-navy-900/80 dark:bg-navy-900/80 light:bg-[#EEF1F6] text-emerald-400 light:text-emerald-600 border border-navy-700/50 light:border-[#E2E6EC]">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-mono text-slate-muted light:text-[#7B879C] uppercase">Availability</p>
-                  <p className="text-sm font-heading font-semibold text-slate-lightest dark:text-slate-lightest light:text-[#111620]">
-                    Remote | On-site | Hybrid
-                  </p>
-                  <p className="text-xs text-slate-muted light:text-[#525E72]">Ready for Associate / Junior Roles</p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <SignalCanvas />
+      </div>
+      <div className="section-wrap mt-14 border-t border-[var(--border)] pt-7">
+        <h2 className="quick-scan-heading">At a glance</h2>
+        <div className="grid gap-3 md:grid-cols-3">
+          <article className="quick-scan-block">
+            <GraduationCap aria-hidden="true" className="h-5 w-5 shrink-0 text-[var(--accent)]" />
+            <div><p className="quick-scan-block__label">Degree</p><p className="quick-scan-block__value">B.S. Information Technology</p><p className="quick-scan-block__detail">Our Lady of Fatima University · Quezon City · 2022–2026</p></div>
+          </article>
+          <article className="quick-scan-block">
+            <Server aria-hidden="true" className="h-5 w-5 shrink-0 text-[var(--accent)]" />
+            <div><p className="quick-scan-block__label">Core stack</p><p className="quick-scan-block__value">Python, SQL, Git</p><p className="quick-scan-block__detail">Raspberry Pi 5, ESP32, IT operations</p></div>
+          </article>
+          <article className="quick-scan-block">
+            <MapPin aria-hidden="true" className="h-5 w-5 shrink-0 text-[var(--accent)]" />
+            <div><p className="quick-scan-block__label">Availability</p><p className="quick-scan-block__value">Remote · On-site · Hybrid</p><p className="quick-scan-block__detail">Associate Software Engineer / Junior Developer roles</p></div>
+          </article>
         </div>
       </div>
     </section>

@@ -10,10 +10,14 @@ export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
+    let savedTheme: string | null = null;
+    try {
+      savedTheme = localStorage.getItem("theme");
+    } catch {
+      // Keep the system's default theme when storage is unavailable.
+    }
 
-    const currentTheme: Theme =
-      savedTheme === "light" ? "light" : "dark";
+    const currentTheme: Theme = savedTheme === "light" ? "light" : "dark";
 
     setTheme(currentTheme);
     setMounted(true);
@@ -28,7 +32,11 @@ export default function ThemeToggle() {
 
     setTheme(newTheme);
 
-    localStorage.setItem("theme", newTheme);
+    try {
+      localStorage.setItem("theme", newTheme);
+    } catch {
+      // The current page still changes theme even when persistence is blocked.
+    }
 
     document.documentElement.classList.remove("dark", "light");
     document.documentElement.classList.add(newTheme);
@@ -38,7 +46,8 @@ export default function ThemeToggle() {
     return (
       <button
         type="button"
-        className="w-9 h-9 rounded-full border border-slate-700"
+        disabled
+        className="h-11 w-11 rounded-full border border-[var(--border)]"
         aria-hidden="true"
       />
     );
@@ -55,23 +64,14 @@ export default function ThemeToggle() {
       }
       className="
         flex items-center justify-center
-        w-9 h-9
-        rounded-full
+        w-11 h-11
+        rounded-md
         border
-        border-slate-700
-        bg-slate-900
-        text-cyan-400
+        border-[var(--border)]
+        bg-[var(--bg-raised)]
+        text-[var(--accent)]
         transition-all duration-200
-        hover:scale-105
-        hover:border-cyan-400
-        focus:outline-none
-        focus-visible:ring-2
-        focus-visible:ring-cyan-400/40
-
-        light:bg-white
-        light:border-slate-200
-        light:text-teal-700
-        light:hover:border-teal-600
+        hover:border-[var(--accent)]
       "
     >
       {isDark ? (

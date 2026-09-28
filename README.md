@@ -1,8 +1,8 @@
-# Niel Arthur B. Rocacurva — Developer Portfolio ("Systems & Signals")
+# Niel Arthur B. Rocacurva — Developer Portfolio
 
 A modern, high-craft personal developer portfolio engineered for **Niel Arthur B. Rocacurva**, a **BSIT Graduate** from Our Lady of Fatima University - Quezon City, applying for **Associate Software Engineer** and **Junior Software Engineer** roles.
 
-Built with **React**, **Next.js 14 (App Router)**, **Tailwind CSS**, and **TypeScript**, styled around an authentic `#0A192F` deep navy command-deck aesthetic.
+Built with **React**, **Next.js 14 (App Router)**, **Tailwind CSS**, and **TypeScript**, with a restrained modular visual system centered on practical software work.
 
 ---
 
@@ -25,16 +25,13 @@ Built with **React**, **Next.js 14 (App Router)**, **Tailwind CSS**, and **TypeS
 
 ---
 
-## 🎨 Design System & Visual Motif: "Systems & Signals"
+## Design System
 
-- **Main Theme**: Deep Navy (`#0A192F`), Elevated Surface Slate (`#112240`), Card Border (`#233554`)
-- **Accent Signals**: Electric Cyan (`#64FFDA` / `#35D9DB`) and Sky Blue (`#57CBFF`)
-- **Light Mode Support**: Seamless toggle in the navigation bar switching to a `#F4F7FB` slate-white layout with high-contrast `#0A192F` dark navy text and accessible teal accents.
-- **Micro-Interactions**:
-  - **Interactive Signal Canvas**: Floating 60fps data node network in the hero section that reacts to mouse movement.
-  - **Terminal-Framed Project Showcases**: Styled as engineering command windows (`AGROSENTINEL: IoT & NDVI Crop Disease Robot`, Python & SQL Analytics Pipeline, IT Operations Diagnostics).
-  - **Competency Bento Grid**: Categorized skills matrix with zero fake percentage bars.
-  - **One-Click Email & Phone Copy**: Instant clipboard copy buttons with visual badge feedback.
+- **Palette**: Slate surfaces, navy text, and a restrained teal accent, with the same hierarchy in dark mode.
+- **Layout**: Open project and experience content with light dividers; modular grouping supports scanning without turning every item into a card.
+- **Theme support**: Persistent light and dark modes use shared CSS variables for colors, surfaces, text, and depth.
+- **Portfolio focus**: The hero summarizes software, data, IoT, and systems work; the project section leads with AGROSENTINEL.
+- **Interactions**: Responsive navigation, resume preview and download, theme toggle, and email/phone copy feedback.
 
 ---
 
@@ -50,26 +47,27 @@ portfolio/
 │   └── globals.css               # Tailwind directives, CSS variables, custom scrollbars
 ├── components/
 │   ├── about/
-│   │   └── About.tsx             # BSIT narrative + niel_arthur_manifest.json specs sheet
+│   │   └── About.tsx             # Concise BSIT background and credentials
 │   ├── contact/
 │   │   └── Contact.tsx           # arthurnielzz@gmail.com, phone, GitHub, LinkedIn
 │   ├── footer/
-│   │   └── Footer.tsx            # Telemetry clock, operational status, and credits
+│   │   └── Footer.tsx            # Name, copyright, and back-to-top link
 │   ├── hero/
-│   │   ├── Hero.tsx              # Career objective, recruiter scan strip, action cluster
-│   │   └── SignalCanvas.tsx      # 60fps interactive signal node visualizer
+│   │   ├── Hero.tsx              # Role, project CTA, and contact actions
+│   │   └── SignalCanvas.tsx      # Technical focus panel
 │   ├── navbar/
-│   │   ├── Navbar.tsx            # Header telemetry, desktop & mobile drawer menu
+│   │   ├── Navbar.tsx            # Desktop/mobile navigation and resume preview
 │   │   └── ThemeToggle.tsx       # Sun/Moon theme switcher persisted in localStorage
 │   ├── projects/
-│   │   └── Projects.tsx          # AGROSENTINEL, SQL & Python Analytics, IT Ops Suite
+│   │   └── Projects.tsx          # AGROSENTINEL, JobUp, Netflix Analysis, InsightForge, data pipeline, IT Ops
 │   ├── skills/
-│   │   └── SkillsBento.tsx       # Python, SQL, Git, Hardware (RPi5/ESP32), Concentrix IT Ops
+│   │   └── SkillsBento.tsx       # Grouped skills grounded in source projects
 │   └── timeline/
 │       └── Timeline.tsx          # Concentrix Practicum, AGROSENTINEL Capstone, OLFU Degree
 ├── public/
+│   ├── resume.pdf
 │   └── resume-placeholder.txt
-├── tailwind.config.ts            # Custom #0A192F color tokens and font variables
+├── tailwind.config.ts            # Tailwind theme and font variables
 ├── tsconfig.json                 # Path aliases (@/*)
 └── package.json                  # Next 14, React 18, Tailwind CSS, Lucide-React
 ```
