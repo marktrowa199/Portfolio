@@ -95,4 +95,6 @@ CONTACT_GMAIL_APP_PASSWORD=your-google-app-password
 
 Create a Google app password for the Gmail account after enabling 2-Step Verification. Add the same variables to the server-side environment settings for your production deployment; do not prefix them with `NEXT_PUBLIC_` or commit `.env.local`. Restart the server after changing environment values.
 
+To send through a different provider instead of Gmail, also set `CONTACT_SMTP_HOST` and `CONTACT_SMTP_PORT` (for example `smtp.example.com` and `587`). Leave them unset to use Gmail's SMTP settings.
+
 The API validates and size-limits requests, uses a honeypot and a basic per-process rate limit, and sets the sender's email as `Reply-To`. The in-memory rate limit is best-effort for a single server process; deployments with multiple instances should use a shared rate-limit store.

@@ -1,16 +1,33 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Check, Copy, FileText, Github, Linkedin, MapPin } from "lucide-react";
 
 type Feedback = { type: "success" | "error"; message: string };
+
+const SUCCESS_MESSAGE = "Message sent successfully! I’ll get back to you soon.";
+const NETWORK_ERROR_MESSAGE = "Something went wrong. Please try again.";
+const DELIVERY_ERROR_MESSAGE = "Sorry, I couldn’t send that just now. Please try again, or email me directly.";
 
 export default function Contact() {
   const [copied, setCopied] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const inFlight = useRef(false);
+  const feedbackTimer = useRef<number | null>(null);
   const email = "arthurnielzz@gmail.com";
   const phone = "(+63) 946-417-9851";
+
+  // Success confirmations fade on their own; errors stay until the next attempt.
+  useEffect(() => {
+    if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
+    if (feedback?.type === "success") {
+      feedbackTimer.current = window.setTimeout(() => setFeedback(null), 6000);
+    }
+    return () => {
+      if (feedbackTimer.current) window.clearTimeout(feedbackTimer.current);
+    };
+  }, [feedback]);
 
   const copy = async (kind: "email" | "phone", value: string) => {
     try {
@@ -24,8 +41,12 @@ export default function Contact() {
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Guards against a second submit slipping through before the button re-renders as disabled.
+    if (inFlight.current) return;
+
     const form = event.currentTarget;
     const formData = new FormData(form);
+    inFlight.current = true;
     setSubmitting(true);
     setFeedback(null);
 
@@ -42,12 +63,31 @@ export default function Contact() {
         }),
       });
 
-      if (!response.ok) throw new Error("Message could not be sent.");
+      const payload = (await response.json().catch(() => null)) as
+        | { success?: boolean; error?: string }
+        | null;
+
+      if (!response.ok) {
+        // 4xx messages are written for visitors, so pass them through. 5xx hides server
+        // configuration details, so those get a friendlier fallback instead.
+        setFeedback({
+          type: "error",
+          message:
+            response.status >= 500
+              ? DELIVERY_ERROR_MESSAGE
+              : payload?.error || NETWORK_ERROR_MESSAGE,
+        });
+        return;
+      }
+
       form.reset();
-      setFeedback({ type: "success", message: "Message sent successfully! I’ll get back to you soon." });
+      setFeedback({ type: "success", message: SUCCESS_MESSAGE });
     } catch {
-      setFeedback({ type: "error", message: "Something went wrong. Please try again." });
+      // Network/transport failure: the browser's own error text ("Failed to fetch") is not
+      // useful to a visitor, so always show the safe fallback and keep the form intact.
+      setFeedback({ type: "error", message: NETWORK_ERROR_MESSAGE });
     } finally {
+      inFlight.current = false;
       setSubmitting(false);
     }
   };
@@ -102,7 +142,7 @@ export default function Contact() {
             <h3 className="text-lg font-semibold text-[var(--text-heading)]">Communication</h3>
             <p className="mt-1 text-sm leading-relaxed text-[var(--text-muted)]">Send a message directly to my inbox.</p>
           </div>
-          <form className="contact-form" onSubmit={submit}>
+          <form className="contact-form" onSubmit={submit} aria-busy={submitting}>
             <div className="contact-form__fields">
               <label className="contact-field">
                 <span>YOUR NAME</span>

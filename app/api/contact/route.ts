@@ -7,6 +7,26 @@ const RATE_LIMIT_MAX = 5;
 const MAX_BODY_BYTES = 12_000;
 const RATE_LIMITS = new Map<string, { count: number; startedAt: number }>();
 
+/**
+ * Defaults to Gmail SMTP. `CONTACT_SMTP_HOST` / `CONTACT_SMTP_PORT` allow pointing at any
+ * other provider (or a local sink during testing) without touching the code. Credentials are
+ * always read from server-only environment variables and never reach the client bundle.
+ */
+function createTransporter(user: string, pass: string) {
+  const host = process.env.CONTACT_SMTP_HOST?.trim();
+  const port = Number(process.env.CONTACT_SMTP_PORT ?? "") || undefined;
+
+  return nodemailer.createTransport({
+    ...(host
+      ? { host, ...(port ? { port, secure: port === 465 } : {}) }
+      : { service: "gmail" as const }),
+    auth: { user, pass },
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 15_000,
+  });
+}
+
 function jsonResponse(body: Record<string, string | boolean>, status = 200) {
   return Response.json(body, {
     status,
@@ -116,13 +136,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: gmailUser, pass: gmailAppPassword },
-      connectionTimeout: 10_000,
-      greetingTimeout: 10_000,
-      socketTimeout: 15_000,
-    });
+    const transporter = createTransporter(gmailUser, gmailAppPassword);
 
     await transporter.sendMail({
       from: { name: "Portfolio Contact Form", address: gmailUser },
