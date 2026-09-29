@@ -2,6 +2,7 @@ import Navbar from "@/components/navbar/Navbar";
 import Hero from "@/components/hero/Hero";
 import About from "@/components/about/About";
 import SkillsBento from "@/components/skills/SkillsBento";
+import Certificates from "@/components/certificates/Certificates";
 import Projects from "@/components/projects/Projects";
 import Timeline from "@/components/timeline/Timeline";
 import ContributionActivity from "@/components/contributions/ContributionActivity";
@@ -27,6 +28,7 @@ export default function Home() {
         <Hero />
         <About />
         <SkillsBento />
+        <Certificates />
         <Projects />
         <Timeline />
         <ContributionActivity />
