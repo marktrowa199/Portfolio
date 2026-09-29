@@ -177,6 +177,49 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .project-demo-link { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: .5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .65rem .9rem; color: var(--text-heading); font-size: .88rem; font-weight: 600; line-height: 1.3; text-decoration: none; transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease; }
 .project-demo-link:hover { border-color: var(--accent); background: var(--bg-raised); color: var(--accent); }
 
+.contribution-panel { min-height: 15rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); padding: clamp(1rem, 3vw, 1.5rem); }
+.contribution-topline, .contribution-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.contribution-topline { flex-wrap: wrap; color: var(--text-muted); font-size: .95rem; }
+.contribution-total strong { color: var(--text-heading); font-size: 1.15rem; font-weight: 650; }
+.contribution-profile-link, .contribution-error a { color: var(--accent); font-size: .88rem; text-underline-offset: 3px; }
+.contribution-years { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1.1rem; border-bottom: 1px solid var(--border); padding-bottom: .8rem; }
+.contribution-year { min-width: 3.5rem; min-height: 2.35rem; border: 1px solid transparent; border-radius: 6px; background: transparent; padding: .35rem .7rem; color: var(--text-muted); font-size: .85rem; font-weight: 550; transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease; }
+.contribution-year:hover { border-color: var(--border); color: var(--text-heading); }
+.contribution-year.is-active { border-color: color-mix(in srgb, var(--accent) 38%, var(--border)); background: color-mix(in srgb, var(--accent) 12%, var(--bg-raised)); color: var(--accent); font-weight: 650; }
+.contribution-scroll { overflow-x: auto; margin: 1.1rem -.25rem 0; padding: .25rem; scrollbar-color: var(--border) transparent; }
+.contribution-calendar { display: grid; width: 100%; min-width: 47rem; grid-template-columns: 2.6rem minmax(0, 1fr); grid-template-rows: 1.35rem auto; column-gap: .45rem; row-gap: .45rem; }
+.contribution-months { display: grid; grid-column: 2; grid-row: 1; grid-template-columns: repeat(var(--week-count), minmax(0, 1fr)); align-items: end; color: var(--text-dim); font-size: .7rem; }
+.contribution-months span { white-space: nowrap; }
+.contribution-weekdays { display: grid; grid-column: 1; grid-row: 2; grid-template-rows: repeat(7, 1fr); align-items: center; color: var(--text-dim); font-size: .66rem; }
+.contribution-weekdays span:nth-child(1) { grid-row: 2; }
+.contribution-weekdays span:nth-child(2) { grid-row: 4; }
+.contribution-weekdays span:nth-child(3) { grid-row: 6; }
+.contribution-weeks { display: grid; grid-column: 2; grid-row: 2; grid-template-columns: repeat(var(--week-count), minmax(0, 1fr)); gap: clamp(2px, .35vw, 5px); }
+.contribution-week { display: grid; grid-template-rows: repeat(7, 1fr); gap: clamp(2px, .35vw, 5px); }
+.contribution-day { display: block; width: 100%; aspect-ratio: 1; border: 0; border-radius: 3px; background: var(--contribution-0); padding: 0; }
+.contribution-week .contribution-day:not(.contribution-day--empty) { cursor: pointer; transition: outline-color 120ms ease, transform 120ms ease; }
+.contribution-week .contribution-day:not(.contribution-day--empty):hover, .contribution-week .contribution-day:not(.contribution-day--empty):focus-visible { z-index: 1; outline: 2px solid var(--text-heading); outline-offset: 1px; transform: scale(1.08); }
+.contribution-day--empty { visibility: hidden; }
+.contribution-day--0 { --contribution-0: color-mix(in srgb, var(--text-dim) 17%, var(--bg-main)); }
+.contribution-day--1 { background: color-mix(in srgb, var(--accent) 28%, var(--bg-main)); }
+.contribution-day--2 { background: color-mix(in srgb, var(--accent) 48%, var(--bg-main)); }
+.contribution-day--3 { background: color-mix(in srgb, var(--accent) 72%, var(--bg-main)); }
+.contribution-day--4 { background: var(--accent); }
+.contribution-footer { flex-wrap: wrap; margin-top: 1.1rem; color: var(--text-dim); font-size: .8rem; }
+.contribution-legend { display: flex; align-items: center; gap: .3rem; }
+.contribution-legend .contribution-day { width: .82rem; }
+.contribution-tooltip { position: fixed; z-index: 1000; max-width: min(19rem, calc(100vw - 2rem)); transform: translate(-50%, -100%); border: 1px solid var(--border); border-radius: 7px; background: var(--text-heading); padding: .5rem .7rem; color: var(--bg-main); box-shadow: 0 5px 16px rgb(0 0 0 / 18%); font-size: .78rem; font-weight: 550; line-height: 1.35; pointer-events: none; white-space: nowrap; }
+.contribution-tooltip.is-below { transform: translate(-50%, 0); }
+.contribution-loading { display: flex; min-height: 17rem; align-items: center; justify-content: center; color: var(--text-muted); }
+.contribution-skeleton-summary { width: min(18rem, 80%); height: 1rem; border-radius: 4px; background: var(--bg-soft); animation: contribution-pulse 1.4s ease-in-out infinite; }
+.contribution-skeleton-grid { display: grid; width: max-content; grid-auto-flow: column; grid-template-rows: repeat(7, 1.15rem); grid-auto-columns: 1.15rem; gap: 4px; margin-top: 1.8rem; }
+.contribution-skeleton-grid span { border-radius: 3px; background: var(--bg-soft); animation: contribution-pulse 1.4s ease-in-out infinite; }
+.contribution-skeleton-grid span:nth-child(3n) { animation-delay: .12s; }
+.contribution-skeleton-grid span:nth-child(5n) { animation-delay: .24s; }
+.contribution-error { display: flex; min-height: 8rem; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; color: var(--text-muted); }
+@keyframes contribution-pulse { 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .contribution-skeleton-summary, .contribution-skeleton-grid span { animation: none; } }
+
 @media (max-width: 640px) {
   .section-wrap { width: min(100% - 2rem, 76rem); }
   .focus-sheet { padding-left: 1rem; }

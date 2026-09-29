@@ -4,6 +4,7 @@ import About from "@/components/about/About";
 import SkillsBento from "@/components/skills/SkillsBento";
 import Projects from "@/components/projects/Projects";
 import Timeline from "@/components/timeline/Timeline";
+import ContributionActivity from "@/components/contributions/ContributionActivity";
 import Contact from "@/components/contact/Contact";
 import Footer from "@/components/footer/Footer";
 
@@ -28,6 +29,7 @@ export default function Home() {
         <SkillsBento />
         <Projects />
         <Timeline />
+        <ContributionActivity />
         <Contact />
       </main>
 
