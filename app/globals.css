@@ -287,3 +287,40 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .brick-lift:hover { transform: none; }
   .hero-build a:hover { transform: none; }
 }
+
+.contact-detail-label { color: var(--text-dim); font-size: .75rem; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }
+.contact-copy-button { display: inline-flex; min-height: 2.75rem; align-items: center; gap: .5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .65rem .9rem; color: var(--text-muted); font-size: .85rem; transition: border-color 150ms ease, color 150ms ease; }
+.contact-copy-button:hover { border-color: var(--accent); color: var(--accent); }
+.contact-social-link { display: inline-flex; min-height: 2.75rem; align-items: center; gap: .55rem; color: var(--text-muted); font-size: .9rem; font-weight: 550; text-decoration: none; transition: color 150ms ease; }
+.contact-social-link:hover { color: var(--accent); }
+.contact-form-panel { min-width: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-main); padding: clamp(1rem, 2.8vw, 1.5rem); }
+.contact-form__fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem 1rem; }
+.contact-field { display: grid; min-width: 0; gap: .45rem; }
+.contact-field--wide { grid-column: 1 / -1; }
+.contact-field > span { color: var(--text-dim); font-size: .7rem; font-weight: 650; letter-spacing: .065em; }
+.contact-field input, .contact-field textarea { width: 100%; min-height: 2.85rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-raised); padding: .7rem .8rem; color: var(--text-main); font: inherit; font-size: .9rem; line-height: 1.5; transition: border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease; }
+.contact-field textarea { min-height: 7rem; resize: vertical; }
+.contact-field input::placeholder, .contact-field textarea::placeholder { color: var(--text-dim); opacity: .8; }
+.contact-field input:hover, .contact-field textarea:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
+.contact-field input:focus-visible, .contact-field textarea:focus-visible { border-color: var(--accent); outline: 3px solid color-mix(in srgb, var(--accent) 24%, transparent); outline-offset: 1px; }
+.contact-field input:disabled, .contact-field textarea:disabled { cursor: wait; opacity: .7; }
+.contact-form__honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.contact-form__footer { display: flex; min-height: 3rem; flex-wrap: wrap; align-items: center; gap: .8rem 1rem; margin-top: 1rem; }
+.contact-submit { display: inline-flex; min-height: 2.9rem; align-items: center; justify-content: center; gap: .6rem; border: 1px solid var(--accent); border-radius: 6px; background: var(--accent); padding: .65rem 1.05rem; color: var(--accent-ink); font-size: .9rem; font-weight: 650; transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease; }
+.contact-submit:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--accent-strong); background: var(--accent-strong); }
+.contact-submit:disabled { cursor: wait; opacity: .75; }
+.contact-spinner { width: 1rem; height: 1rem; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: contact-spin .7s linear infinite; }
+.contact-form-message { flex: 1 1 16rem; border: 1px solid var(--border); border-radius: 6px; padding: .6rem .75rem; font-size: .82rem; line-height: 1.45; }
+.contact-form-message--success { border-color: color-mix(in srgb, var(--brick-green) 35%, var(--border)); background: color-mix(in srgb, var(--brick-green) 10%, var(--bg-raised)); color: var(--brick-green); }
+.contact-form-message--error { border-color: color-mix(in srgb, var(--brick-red) 45%, var(--border)); background: color-mix(in srgb, var(--brick-red) 10%, var(--bg-raised)); color: var(--brick-red); }
+@keyframes contact-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 560px) {
+  .contact-form__fields { grid-template-columns: minmax(0, 1fr); }
+  .contact-field--wide { grid-column: auto; }
+  .contact-form-message { flex-basis: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contact-spinner { animation-duration: 1.5s; }
+  .contact-copy-button, .contact-social-link, .contact-field input, .contact-field textarea, .contact-submit { transition: none; }
+}

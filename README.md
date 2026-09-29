@@ -81,3 +81,18 @@ portfolio/
 - **Email**: `arthurnielzz@gmail.com`
 - **Phone**: `(+63) 946-417-9851`
 - **Work Mode**: Open to Remote | On-site | Hybrid
+
+---
+
+## Contact Form Email Setup
+
+The contact form sends messages from the Next.js server through Gmail SMTP. For local development, copy `.env.example` to `.env.local` and set:
+
+```dotenv
+CONTACT_GMAIL_USER=arthurnielzz@gmail.com
+CONTACT_GMAIL_APP_PASSWORD=your-google-app-password
+```
+
+Create a Google app password for the Gmail account after enabling 2-Step Verification. Add the same variables to the server-side environment settings for your production deployment; do not prefix them with `NEXT_PUBLIC_` or commit `.env.local`. Restart the server after changing environment values.
+
+The API validates and size-limits requests, uses a honeypot and a basic per-process rate limit, and sets the sender's email as `Reply-To`. The in-memory rate limit is best-effort for a single server process; deployments with multiple instances should use a shared rate-limit store.
