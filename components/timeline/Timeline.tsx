@@ -16,42 +16,43 @@ type Milestone = {
 
 const experience: Milestone[] = [
   {
-    type: "Work Experience", date: "Feb. 2026 – April 2026", title: "IT Operations / IT Support Intern",
+    type: "Work Experience", date: "Feb. 2026 – April 2026", title: "IT Operations Intern",
     place: "Concentrix", location: "Quezon City, Philippines", color: "blue",
-    detail: "Enterprise IT support practicum managing workstation deployment, secure user access provisioning, hardware troubleshooting, and ticketing efficiency.",
+    detail: "Enterprise IT support practicum covering workstation deployment, user access provisioning, hardware maintenance, asset lifecycle tracking, and day-to-day support ticket handling.",
     highlights: [
-      "Reimaged and installed Windows OS on workstations, preparing systems for deployment.",
-      "Configured user accounts and VPN access for secure user onboarding.",
-      "Deployed, upgraded, and troubleshot desktops and hardware.",
-      "Managed IT asset inventory and equipment lifecycle records.",
-      "Processed workstation setup, retrieval, and replacement requests.",
-      "Monitored and documented IT support tickets.",
+      "Reimaged and deployed Windows operating systems on workstations, preparing units for handover.",
+      "Deployed user accounts, credentials, and application access for newly onboarded staff.",
+      "Configured VPN access for staff requiring secure remote connectivity to company systems.",
+      "Inspected and upgraded desktop units, including component replacement and RAM upgrades.",
+      "Maintained IT asset inventory, tagging, and equipment records across the assigned pool.",
+      "Processed asset retrieval, return, and transfer requests between users and locations.",
+      "Logged, tracked, and resolved IT support tickets within the ticketing system.",
     ],
-    tags: ["Windows OS Imaging", "VPN Configuration", "Hardware Troubleshooting", "IT Asset Tracking", "Ticketing"],
+    tags: ["Device Reimaging", "Account Deployment", "VPN Configuration", "Hardware Upgrades", "RAM Upgrades", "IT Asset Tracking", "Ticketing"],
   },
   {
     type: "Capstone Engineering Project", date: "Dec. 2025", title: "Hardware Integration & AI Support Contributor",
     place: "AGROSENTINEL Project Team", location: "Fatima Robotics Lab", color: "green",
-    detail: "IoT and NDVI-based crop disease detection and automated spraying robotic platform designed to protect agricultural yields.",
+    detail: "IoT and computer-vision based agricultural system for spinach leaf-necrosis detection and automated fungicide spraying, designed to protect agricultural yields.",
     highlights: [
-      "Assisted in the development of an AI-based agricultural robot with automated spraying.",
-      "Contributed to hardware assembly and integration, including Raspberry Pi 5, ESP32, motor drivers, sensors, and spraying system.",
+      "Assisted in the development of an agricultural robot with automated fungicide spraying.",
+      "Contributed to hardware assembly and integration, including Raspberry Pi 5, ESP32, motor drivers, sensors, and the sprayer.",
       "Helped set up and test robot movement and spraying functionality.",
-      "Provided support in training the plant disease detection AI model using image data.",
+      "Provided support in training the leaf-necrosis detection model using image data.",
     ],
-    tags: ["Raspberry Pi 5", "ESP32", "AI Model Training", "Motor Drivers", "Sensors", "Automated Spraying"],
+    tags: ["Raspberry Pi 5", "ESP32", "YOLOv5", "NDVI", "AI Model Training", "Automated Sprayer"],
   },
 ];
 
 const education: Milestone[] = [
   {
-    type: "Higher Education", date: "2022 – 2026", title: "Bachelor of Science in Information Technology (BSIT)",
+    type: "Higher Education", date: "Graduated: August 2026", title: "Bachelor of Science in Information Technology (BSIT)",
     place: "Our Lady of Fatima University – Quezon City", location: "Quezon City, Philippines", color: "yellow",
     detail: "Four-year degree encompassing software development, relational database systems, networking, and systems administration.",
     highlights: [
       "Built grounded proficiency in Python programming, SQL databases, and Git version control.",
       "Completed hands-on coursework in systems analysis, web development, and information security.",
-      "Successfully defended graduation capstone project in IoT robotics and AI image detection.",
+      "Successfully defended a graduation capstone project in IoT robotics and computer vision.",
     ],
     tags: ["Software Engineering", "Python", "SQL", "Networking", "Database Systems"],
   },
@@ -97,11 +98,12 @@ function MilestoneList({ items }: { items: Milestone[] }) {
 export default function Timeline() {
   return (
     <>
-      <section id="journey" className="section-space scroll-mt-20">
+      <section id="experience" className="section-space scroll-mt-20">
         <div className="section-wrap grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:gap-16">
           <div>
-            <h2 className="section-title">Experience</h2>
-            <p className="section-intro mt-4">Professional experience and project work.</p>
+            <p className="eyebrow">01 · Experience</p>
+            <h2 className="section-title mt-4">Experience</h2>
+            <p className="section-intro mt-4">Work experience and hands-on project work.</p>
           </div>
           <MilestoneList items={experience} />
         </div>
@@ -110,8 +112,9 @@ export default function Timeline() {
       <section id="education" className="section-space scroll-mt-20 border-t border-[var(--border)]">
         <div className="section-wrap grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:gap-16">
           <div>
-            <h2 className="section-title">Education</h2>
-            <p className="section-intro mt-4">Academic background.</p>
+            <p className="eyebrow">02 · Education</p>
+            <h2 className="section-title mt-4">Education</h2>
+            <p className="section-intro mt-4">Academic background and where it started.</p>
           </div>
           <MilestoneList items={education} />
         </div>

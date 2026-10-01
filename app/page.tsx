@@ -27,10 +27,10 @@ export default function Home() {
       <main className="flex-grow">
         <Hero />
         <About />
+        <Timeline />
+        <Projects />
         <SkillsBento />
         <Certificates />
-        <Projects />
-        <Timeline />
         <ContributionActivity />
         <Contact />
       </main>

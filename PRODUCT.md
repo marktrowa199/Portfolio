@@ -23,7 +23,7 @@ An early-career engineer with a practical foundation across software and data wo
 - Existing implementation uses Next.js 14, React 18, TypeScript, and Tailwind CSS. Preserve its single-page architecture and current routes.
 - Keep the dark and light themes, responsive navigation, resume preview/download, existing contact methods, and documented projects.
 - Do not invent project claims, metrics, results, screenshots, or repository links.
-- The user supplied these basic descriptions for additional projects: JobUp is an AI-powered job application assistant / job search platform; Netflix Data Analysis is a SQL data analytics project using PostgreSQL; InsightForge supports dataset upload, cleaning, analysis, charts, and reports. Exact contributions, further technical details, metrics, assets, and links are not in the repository.
+- The portfolio shows exactly two projects. JobUp is an AI-powered job application assistant built as a full-stack web app (Python/FastAPI backend, Next.js frontend, SQL storage, OpenAI API, deployed on Vercel and Render), with a live demo at https://job-up.vercel.app/ and source at https://github.com/marktrowa199/JobUp. AGROSENTINEL is an IoT and computer-vision capstone for spinach leaf-necrosis detection with an automated fungicide sprayer. Netflix Data Analysis and InsightForge are intentionally excluded and must not reappear in the UI.
 
 ## Brand Commitments
 

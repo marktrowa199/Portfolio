@@ -96,7 +96,8 @@ export default function Contact() {
     <section id="contact" className="section-space scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-raised)]">
       <div className="section-wrap grid items-start gap-10 lg:grid-cols-[.8fr_1.2fr] lg:gap-16">
         <div>
-          <h2 className="section-title">Let’s talk about the work.</h2>
+          <p className="eyebrow">07 · Contact</p>
+          <h2 className="section-title mt-4">Let’s talk about the work.</h2>
           <p className="section-intro mt-5">I’m looking for Associate Software Engineer and Junior Software Engineer opportunities. Open to remote, on-site, or hybrid roles.</p>
 
           <div className="mt-8 space-y-5">

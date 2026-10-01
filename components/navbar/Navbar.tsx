@@ -7,14 +7,17 @@ import { ArrowLeft, ArrowUpRight, FileText, Menu, X } from "lucide-react";
 
 const NAV_ITEMS = [
   { label: "About", href: "#about" },
-  { label: "Skills", href: "#skills" },
+  { label: "Experience", href: "#experience" },
+  { label: "Education", href: "#education" },
   { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#journey" },
+  { label: "Skills", href: "#skills" },
+  { label: "Certificates", href: "#certificates" },
   { label: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [resumeModalOpen, setResumeModalOpen] = useState(false);
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
@@ -24,6 +27,32 @@ export default function Navbar() {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Scroll-spy: highlight the section currently occupying the upper viewport band.
+  useEffect(() => {
+    const sections = NAV_ITEMS
+      .map((item) => document.querySelector<HTMLElement>(item.href))
+      .filter((section): section is HTMLElement => section !== null);
+    if (sections.length === 0) return;
+
+    const visible = new Map<string, number>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          visible.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
+        }
+        const topmost = sections
+          .filter((section) => (visible.get(section.id) ?? 0) > 0)
+          .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top)[0];
+        setActiveSection(topmost ? topmost.id : "");
+      },
+      // A band across the top third of the viewport, under the fixed header.
+      { rootMargin: "-20% 0px -60% 0px", threshold: [0, 0.25, 0.5, 1] },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -91,20 +120,25 @@ export default function Navbar() {
           </span>
         </a>
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-5 lg:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-1 xl:flex">
           {NAV_ITEMS.map((item) => (
-            <a key={item.href} href={item.href} className="rounded-sm py-2 text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]">{item.label}</a>
+            <a
+              key={item.href}
+              href={item.href}
+              aria-current={activeSection === item.href.slice(1) ? "true" : undefined}
+              className={`nav-link${activeSection === item.href.slice(1) ? " is-active" : ""}`}
+            >{item.label}</a>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 xl:flex">
           <button type="button" onClick={(event) => openResume(event.currentTarget)} className="inline-flex min-h-11 items-center gap-2 rounded-md border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--text-heading)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]">
             <FileText aria-hidden="true" className="h-4 w-4" /> Resume
           </button>
           <ThemeToggle />
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <ThemeToggle />
           <button ref={menuTriggerRef} type="button" onClick={() => setMobileMenuOpen((open) => !open)} aria-expanded={mobileMenuOpen} aria-controls="mobile-navigation-dialog" aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"} className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--bg-raised)] text-[var(--text-heading)] hover:border-[var(--accent)] hover:text-[var(--accent)]">
             {mobileMenuOpen ? <X aria-hidden="true" className="h-5 w-5" /> : <Menu aria-hidden="true" className="h-5 w-5" />}
@@ -113,7 +147,7 @@ export default function Navbar() {
       </div>
 
       {mobileMenuOpen && typeof document !== "undefined" && createPortal(
-        <div role="dialog" aria-modal="true" aria-label="Mobile navigation" onKeyDown={keepFocusInDialog} className="fixed inset-0 z-[55] bg-black/40 lg:hidden">
+        <div role="dialog" aria-modal="true" aria-label="Mobile navigation" onKeyDown={keepFocusInDialog} className="fixed inset-0 z-[55] bg-black/40 xl:hidden">
           <div id="mobile-navigation-dialog" className="absolute inset-x-0 bottom-0 top-20 overflow-y-auto border-t border-[var(--border)] bg-[var(--bg-main)] p-6 text-[var(--text-main)]">
             <div className="flex min-h-full flex-col justify-between gap-8">
               <div>
@@ -124,7 +158,7 @@ export default function Navbar() {
                   <ul className="divide-y divide-[var(--border)]">
                     {NAV_ITEMS.map((item) => (
                       <li key={item.href}>
-                        <a href={item.href} onClick={() => setMobileMenuOpen(false)} className="flex min-h-14 items-center justify-between text-xl font-medium text-[var(--text-heading)] hover:text-[var(--accent)]">
+                        <a href={item.href} onClick={() => setMobileMenuOpen(false)} aria-current={activeSection === item.href.slice(1) ? "true" : undefined} className={`flex min-h-14 items-center justify-between text-xl font-medium ${activeSection === item.href.slice(1) ? "text-[var(--accent)]" : "text-[var(--text-heading)] hover:text-[var(--accent)]"}`}>
                           {item.label}<ArrowUpRight aria-hidden="true" className="h-4 w-4 text-[var(--text-dim)]" />
                         </a>
                       </li>

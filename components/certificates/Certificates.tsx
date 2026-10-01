@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 type Certificate = {
   title: string;
   issuer: string;
+  /** Only set where the completion date is documented on the credential itself. */
+  date?: string;
   issuerLogo?: string;
   issuerKind?: "text";
   file: string;
@@ -31,7 +33,7 @@ const certificates: Certificate[] = [
   { title: "IT Specialist: Networking", issuer: "CertNexus", issuerLogo: "/certificate-issuers/certnexus.png", file: "NETWORKING_CERT.pdf" },
   { title: "Networking Devices and Initial Configuration", issuer: "Cisco Networking Academy", issuerLogo: "/certificate-issuers/cisco.svg", file: "Networking_Devices_and_Initial_Configuration_Badge.pdf" },
   { title: "Network Technician Career Path", issuer: "Cisco Networking Academy", issuerLogo: "/certificate-issuers/cisco.svg", file: "NetworkTechnicianCareerPathUpdate20250502-25-nebw6u.pdf" },
-  { title: "Security, Compliance, and Identity Fundamentals", issuer: "Microsoft", issuerLogo: "/certificate-issuers/microsoft.svg", file: "Niel Arthur B. Rocacurva.pdf" },
+  { title: "Security, Compliance, and Identity Fundamentals", issuer: "Microsoft", date: "July 2026", issuerLogo: "/certificate-issuers/microsoft.svg", file: "Niel Arthur B. Rocacurva.pdf" },
   { title: "Prompt Engineering with the OpenAI API", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Prompt Engineering with the OpenAI API.pdf" },
   { title: "IT Specialist: Python", issuer: "CertNexus", issuerLogo: "/certificate-issuers/certnexus.png", file: "PYTHON_CERT.pdf" },
   { title: "Software Engineering Principles in Python", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Software Engineering Principles in Python.pdf" },
@@ -73,8 +75,9 @@ export default function Certificates() {
     <section id="certificates" className="section-space scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-raised)]">
       <div className="section-wrap">
         <div className="mb-9 max-w-3xl sm:mb-12">
-          <h2 className="section-title">Certificates</h2>
-          <p className="section-intro mt-4">A selection of completed courses, certifications, and learning events. Select any certificate to view it.</p>
+          <p className="eyebrow">05 · Certificates</p>
+          <h2 className="section-title mt-4">Certificates</h2>
+          <p className="section-intro mt-4">Completed courses, certifications, and learning events. Select any certificate to view it.</p>
         </div>
 
         <div className="certificate-grid">
@@ -91,6 +94,7 @@ export default function Certificates() {
                 <span className="certificate-card__issuer">{certificate.issuer}</span>
               </span>
               <span className="certificate-card__title">{certificate.title}</span>
+              {certificate.date && <span className="certificate-card__date">{certificate.date}</span>}
               <span className="certificate-card__action">View certificate <span aria-hidden="true">↗</span></span>
             </button>
           ))}
@@ -108,7 +112,7 @@ export default function Certificates() {
           <div className="certificate-viewer__header">
             <div className="min-w-0">
               <h3 id="certificate-viewer-title" className="certificate-viewer__title">{selected.title}</h3>
-              <p className="certificate-viewer__issuer">{selected.issuer}</p>
+              <p className="certificate-viewer__issuer">{selected.issuer}{selected.date ? ` · ${selected.date}` : ""}</p>
             </div>
             <button className="certificate-viewer__close" type="button" onClick={closeViewer} aria-label="Close certificate viewer">
               <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">

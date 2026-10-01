@@ -13,7 +13,8 @@ export default function About() {
     <section id="about" className="section-space scroll-mt-20 border-y border-[var(--border)] bg-[var(--bg-raised)]">
       <div className="section-wrap grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:gap-16">
         <div>
-          <h2 className="section-title">An engineer who likes to build across disciplines.</h2>
+          <p className="eyebrow">00 · About</p>
+          <h2 className="section-title mt-4">An engineer who likes to build across disciplines.</h2>
           <p className="mt-5 max-w-[58ch] leading-relaxed text-[var(--text-muted)]">
             I am a motivated Bachelor of Science in Information Technology graduate from Our Lady of Fatima University – Quezon City (2022–2026). My technical foundation brings together software development fundamentals, real-world infrastructure, and systems experience.
           </p>

@@ -22,24 +22,29 @@ export default function Hero() {
     <section id="home" className="hero-build relative isolate flex flex-col justify-center py-28 sm:py-32">
       <div className="section-wrap grid w-full items-center gap-10 lg:grid-cols-[.92fr_1.08fr] lg:gap-14">
         <div className="max-w-2xl">
-          <h1 className="text-[clamp(2.6rem,4.9vw,4.5rem)] font-semibold leading-[1.04] tracking-[-.03em]">
+          <p className="eyebrow">Portfolio · 2026</p>
+          <h1 className="mt-4 text-[clamp(2.6rem,4.9vw,4.5rem)] font-semibold leading-[1.04] tracking-[-.03em]">
             Niel Arthur <span className="text-[var(--accent)]">B. Rocacurva</span>
           </h1>
           <p className="mt-5 text-xl font-semibold leading-snug text-[var(--text-heading)] sm:text-2xl">
-            Aspiring Associate Software Engineer / Junior Developer
+            Aspiring Software Developer / IT Professional
           </p>
           <p className="mt-2 text-base font-medium text-[var(--text-muted)] sm:text-lg">
-            Software · data · AI · IoT · Full Stack Developer
+            Software development · AI · Data analytics · IT operations
           </p>
           <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-[var(--text-muted)]">
-            Motivated BSIT graduate from Our Lady of Fatima University seeking to apply my skills in Python, SQL, Git, and software development while contributing to engineering solutions and growing as a software engineer.
+            I build practical technology projects across software, AI, and data — a Python and SQL
+            job-search assistant, an IoT crop-disease robot, and the day-to-day IT operations work
+            that keeps systems running. Currently a BSIT graduate from Our Lady of Fatima
+            University, looking for an Associate or Junior Software Engineer role where I can keep
+            learning and contribute to real engineering work.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <a href="#projects" className="inline-flex min-h-12 items-center gap-2 rounded-md bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-ink)] shadow-[0_4px_10px_-6px_rgb(0_0_0_/_45%)] transition hover:-translate-y-0.5 hover:bg-[var(--accent-strong)]">
-              Explore projects <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              View My Projects <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </a>
             <a href="#contact" className="inline-flex min-h-12 items-center rounded-md border border-[var(--border)] bg-[var(--bg-raised)] px-5 py-3 text-sm font-semibold text-[var(--text-heading)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]">
-              Contact me
+              Contact Me
             </a>
             <button type="button" onClick={copyEmail} className="inline-flex min-h-12 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-[var(--text-muted)] transition hover:text-[var(--accent)]" aria-live="polite">
               {copyState === "copied" ? <Check aria-hidden="true" className="h-4 w-4" /> : <Copy aria-hidden="true" className="h-4 w-4" />}

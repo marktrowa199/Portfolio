@@ -59,7 +59,7 @@ portfolio/
 │   │   ├── Navbar.tsx            # Desktop/mobile navigation and resume preview
 │   │   └── ThemeToggle.tsx       # Sun/Moon theme switcher persisted in localStorage
 │   ├── projects/
-│   │   └── Projects.tsx          # AGROSENTINEL, JobUp, Netflix Analysis, InsightForge, data pipeline, IT Ops
+│   │   └── Projects.tsx          # JobUp, AGROSENTINEL
 │   ├── skills/
 │   │   └── SkillsBento.tsx       # Grouped skills grounded in source projects
 │   └── timeline/
