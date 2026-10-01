@@ -86,17 +86,24 @@ portfolio/
 
 ---
 
-## Contact Form Email Setup
+## Contact Form Setup (Web3Forms)
 
-The contact form sends messages from the Next.js server through Gmail SMTP. For local development, copy `.env.example` to `.env.local` and set:
+The contact form posts to `https://api.web3forms.com/submit` through the server route at `app/api/contact/route.ts`. Get a free access key from [web3forms.com](https://web3forms.com) after verifying the address that should receive messages.
+
+For local development, copy `.env.example` to `.env.local` and set:
 
 ```dotenv
-CONTACT_GMAIL_USER=arthurnielzz@gmail.com
-CONTACT_GMAIL_APP_PASSWORD=your-google-app-password
+VITE_WEB3FORMS_ACCESS_KEY=your_actual_web3forms_access_key
 ```
 
-Create a Google app password for the Gmail account after enabling 2-Step Verification. Add the same variables to the server-side environment settings for your production deployment; do not prefix them with `NEXT_PUBLIC_` or commit `.env.local`. Restart the server after changing environment values.
+Restart the server after changing environment values.
 
-To send through a different provider instead of Gmail, also set `CONTACT_SMTP_HOST` and `CONTACT_SMTP_PORT` (for example `smtp.example.com` and `587`). Leave them unset to use Gmail's SMTP settings.
+**On the `VITE_` prefix:** this is a Next.js project, not Vite, so the prefix carries no meaning here — it is kept only so the variable name already in your `.env` keeps working. `WEB3FORMS_ACCESS_KEY` (unprefixed) is also accepted.
 
-The API validates and size-limits requests, uses a honeypot and a basic per-process rate limit, and sets the sender's email as `Reply-To`. The in-memory rate limit is best-effort for a single server process; deployments with multiple instances should use a shared rate-limit store.
+**Why the key is read on the server:** Web3Forms keys are designed to be visible in the browser, and the usual `VITE_*` / `NEXT_PUBLIC_*` pattern inlines the value into the shipped bundle. Reading it in the route handler keeps it out of the client JavaScript entirely. The trade-off is that the form needs a running server, so it will not work on a purely static host.
+
+**Deploying to Vercel:** add `VITE_WEB3FORMS_ACCESS_KEY` under **Project → Settings → Environment Variables** and redeploy. Setting it only in `.env.local` will *not* reach the deployment.
+
+The API validates and size-limits requests, enforces same-origin, uses a honeypot and a basic per-process rate limit, prefixes the outgoing subject with `Portfolio Contact — `, sets the visitor's name as `from_name`, and sets the visitor's address as `replyto`. Delivery failures are read from the response body rather than the status code: an invalid key returns `403` with an empty body, while other rejections return `200` with `success: false`. The in-memory rate limit is best-effort for a single server process; deployments with multiple instances should use a shared rate-limit store.
+
+Field names were verified against [Web3Forms' advanced options documentation](https://docs.web3forms.com/getting-started/examples/advanced-all-options).
