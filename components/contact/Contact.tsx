@@ -8,6 +8,23 @@ type Feedback = { type: "success" | "error"; message: string };
 const SUCCESS_MESSAGE = "Message sent successfully! I’ll get back to you soon.";
 const NETWORK_ERROR_MESSAGE = "Something went wrong. Please try again.";
 const DELIVERY_ERROR_MESSAGE = "Sorry, I couldn’t send that just now. Please try again, or email me directly.";
+const NOT_CONFIGURED_MESSAGE = "The contact form isn’t configured yet. Please email me directly.";
+
+/**
+ * Web3Forms endpoint and access key.
+ *
+ * Web3Forms requires this request to originate in the browser: it rejects server-side
+ * and proxied calls with `403 This method is not allowed`, and server-side use requires a
+ * paid plan plus IP safelisting. Their docs also state the access key is not a secret and
+ * is safe in client-side code — it works as an alias for the destination inbox, and the
+ * only real protection is the honeypot plus Web3Forms' own spam filtering.
+ *
+ * `NEXT_PUBLIC_` is the Next.js equivalent of Vite's `VITE_` prefix. It is inlined into the
+ * public bundle at build time, which is expected here.
+ */
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY?.trim() ?? "";
+const EMAIL_SUBJECT_PREFIX = "Portfolio Contact";
 
 export default function Contact() {
   const [copied, setCopied] = useState<string | null>(null);
@@ -45,38 +62,68 @@ export default function Contact() {
     if (inFlight.current) return;
 
     const form = event.currentTarget;
-    const formData = new FormData(form);
+    const values = new FormData(form);
+
+    if (!WEB3FORMS_ACCESS_KEY) {
+      setFeedback({ type: "error", message: NOT_CONFIGURED_MESSAGE });
+      return;
+    }
+
+    const name = String(values.get("name") ?? "").trim();
+    const email = String(values.get("email") ?? "").trim();
+    // Newlines and control characters are stripped so the subject can never carry extra
+    // mail headers.
+    const subject = String(values.get("subject") ?? "")
+      .trim()
+      .replace(/[\r\n\u0000-\u001f\u007f]+/g, " ");
+    const message = String(values.get("message") ?? "").trim();
+    const honeypot = String(values.get("website") ?? "").trim();
+
+    // Honeypot tripped: behave exactly like success so an automated submitter learns nothing,
+    // but send nothing.
+    if (honeypot) {
+      form.reset();
+      setFeedback({ type: "success", message: SUCCESS_MESSAGE });
+      return;
+    }
+
     inFlight.current = true;
     setSubmitting(true);
     setFeedback(null);
 
     try {
-      const response = await fetch("/api/contact", {
+      const payload = new FormData();
+      payload.append("access_key", WEB3FORMS_ACCESS_KEY);
+      payload.append("name", name);
+      payload.append("email", email);
+      payload.append("subject", `${EMAIL_SUBJECT_PREFIX} — ${subject}`);
+      payload.append("message", message);
+      // Labels the sender in the delivered email so the inbox shows who wrote.
+      payload.append("from_name", name);
+      // Makes Reply-To address the visitor instead of Web3Forms' no-reply address.
+      payload.append("replyto", email);
+      // Web3Forms' own spam check, complementing the honeypot above.
+      payload.append("botcheck", "0");
+
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: formData.get("name"),
-          email: formData.get("email"),
-          subject: formData.get("subject"),
-          message: formData.get("message"),
-          website: formData.get("website"),
-        }),
+        body: payload,
+        headers: { Accept: "application/json" },
       });
 
-      const payload = (await response.json().catch(() => null)) as
-        | { success?: boolean; error?: string }
+      const result = (await response.json().catch(() => null)) as
+        | { success?: boolean; message?: string }
         | null;
 
-      if (!response.ok) {
-        // 4xx messages are written for visitors, so pass them through. 5xx hides server
-        // configuration details, so those get a friendlier fallback instead.
-        setFeedback({
-          type: "error",
-          message:
-            response.status >= 500
-              ? DELIVERY_ERROR_MESSAGE
-              : payload?.error || NETWORK_ERROR_MESSAGE,
+      // Verified against the live API: a rejected key returns 403 with an empty body, while
+      // other rejections return 200 with success:false. The status code alone is unreliable,
+      // so a missing or non-success body is treated as failure either way.
+      if (!response.ok || !result || result.success !== true) {
+        console.error("Web3Forms submission failed:", {
+          status: response.status,
+          detail: result?.message ?? "no message returned",
         });
+        setFeedback({ type: "error", message: DELIVERY_ERROR_MESSAGE });
         return;
       }
 
