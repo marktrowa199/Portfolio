@@ -40,14 +40,19 @@ export default function ProjectScreenshot({
     );
   }
 
+  // A portrait capture rendered at full card width would make the card very tall, so it
+  // gets a height cap instead. `object-fit: contain` keeps the real aspect ratio and
+  // never crops; the image simply centres in the frame.
+  const portrait = height > width;
+
   return (
-    <div className="project-shot">
+    <div className={`project-shot${portrait ? " project-shot--portrait" : ""}`}>
       <Image
         src={src}
         alt={alt}
         width={width}
         height={height}
-        sizes="(min-width: 1024px) 44rem, (min-width: 640px) 60vw, 92vw"
+        sizes={portrait ? "(min-width: 640px) 24rem, 88vw" : "(min-width: 1024px) 44rem, (min-width: 640px) 60vw, 92vw"}
         className="project-shot__img"
         onError={() => setFailed(true)}
         priority={false}

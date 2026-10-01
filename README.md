@@ -66,7 +66,7 @@ portfolio/
 │   └── timeline/
 │       └── Timeline.tsx          # Concentrix Practicum, AGROSENTINEL Capstone, OLFU Degree
 ├── public/
-│   ├── images/                   # Drop jobup-screenshot.png here (see its README)
+│   ├── screenshots/               # JobUp capture (see its README)
 │   ├── resume.pdf
 │   └── resume-placeholder.txt
 ├── tailwind.config.ts            # Tailwind theme and font variables

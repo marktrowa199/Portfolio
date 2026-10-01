@@ -16,15 +16,18 @@ type Project = {
 };
 
 /**
- * Intrinsic size of the JobUp capture. Update `width`/`height` to the real pixel
- * dimensions of your file if they differ; the aspect ratio is preserved either way.
- * Drop the file at the `src` path under `public/` — no other change is needed.
+ * The JobUp capture lives at `public/screenshots/screenshotJobUp.png` — the file must
+ * be under `public/` to be served at all.
+ *
+ * `width`/`height` are the real intrinsic pixels (862 x 933). They let the browser
+ * reserve the correct box before the image loads, which avoids layout shift; the
+ * stylesheet then constrains the rendered size without ever cropping or distorting.
  */
 const JOBUP_SCREENSHOT = {
-  src: "/images/jobup-screenshot.png",
+  src: "/screenshots/screenshotJobUp.png",
   alt: "JobUp application interface showing the job discovery dashboard",
-  width: 1440,
-  height: 900,
+  width: 862,
+  height: 933,
 };
 
 const projects: Project[] = [
