@@ -1,5 +1,10 @@
+"use client";
+
 import { ExternalLink, Github } from "lucide-react";
+import { ImageLightboxProvider, type LightboxImage } from "@/components/ui/ImageLightbox";
 import ProjectScreenshot from "./ProjectScreenshot";
+
+type ProjectImage = LightboxImage;
 
 type Project = {
   id: string;
@@ -10,7 +15,10 @@ type Project = {
   color: "blue" | "yellow" | "red" | "green";
   features?: string[];
   technologies?: string[];
-  screenshot?: { src: string; alt: string; width: number; height: number };
+  screenshot?: ProjectImage;
+  /** Extra project photos shown as a grid inside the card rather than as their own project. */
+  gallery?: ProjectImage[];
+  galleryLabel?: string;
   demoUrl?: string;
   repositoryUrl?: string;
 };
@@ -29,6 +37,26 @@ const JOBUP_SCREENSHOT = {
   width: 862,
   height: 933,
 };
+
+/**
+ * Capstone photographs for AGROSENTINEL. Both are 4:3 landscape captures (2400 x 1800 and
+ * 2048 x 1536) and are shown side by side inside the existing capstone card — they are
+ * evidence for that project, not separate projects.
+ */
+const AGROSENTINEL_PHOTOS: ProjectImage[] = [
+  {
+    src: "/screenshots/agrosentinel.jpg",
+    alt: "AGROSENTINEL capstone project photograph",
+    width: 2400,
+    height: 1800,
+  },
+  {
+    src: "/screenshots/capstone.jpg",
+    alt: "AGROSENTINEL capstone project photograph, second of two",
+    width: 2048,
+    height: 1536,
+  },
+];
 
 const projects: Project[] = [
   {
@@ -83,11 +111,31 @@ const projects: Project[] = [
       "IoT",
       "Automated Sprayer",
     ],
+    gallery: AGROSENTINEL_PHOTOS,
+    galleryLabel: "From the build",
   },
 ];
 
+function ProjectGallery({ label, images }: { label: string; images: ProjectImage[] }) {
+  return (
+    <div className="project-gallery">
+      <h4 className="project-gallery__label">{label}</h4>
+      <div className="project-gallery__grid">
+        {images.map((image, index) => (
+          <figure className="project-gallery__item" key={image.src}>
+            <ProjectScreenshot {...image} gallery={images} galleryIndex={index} />
+          </figure>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ProjectBlock({ project }: { project: Project }) {
   const hasLinks = Boolean(project.demoUrl || project.repositoryUrl);
+  // Every image in this card shares one viewer set, so arrow keys move within the project
+  // instead of jumping to a different one.
+  const gallery = project.gallery ?? (project.screenshot ? [project.screenshot] : []);
 
   return (
     <article className={`project-block project-block--${project.color} brick-lift`}>
@@ -101,6 +149,7 @@ function ProjectBlock({ project }: { project: Project }) {
           alt={project.screenshot.alt}
           width={project.screenshot.width}
           height={project.screenshot.height}
+          gallery={gallery}
         />
       )}
 
@@ -110,6 +159,10 @@ function ProjectBlock({ project }: { project: Project }) {
           <p className="project-block__tagline">{project.tagline}</p>
           <p className="mt-2.5 max-w-[62ch] text-[.93rem] leading-relaxed text-[var(--text-muted)]">{project.summary}</p>
         </div>
+
+        {project.gallery && project.gallery.length > 0 && (
+          <ProjectGallery label={project.galleryLabel ?? "Project photos"} images={project.gallery} />
+        )}
 
         {project.features && (
           <div className="project-fact project-fact--features">
@@ -150,19 +203,21 @@ function ProjectBlock({ project }: { project: Project }) {
 
 export default function Projects() {
   return (
-    <section id="projects" className="section-space scroll-mt-20 border-t border-[var(--border)]">
-      <div className="section-wrap">
-        <div className="section-head">
-          <div>
-            <p className="eyebrow">03 · Projects</p>
-            <h2 className="section-title mt-3">Two builds, from real work.</h2>
+    <ImageLightboxProvider>
+      <section id="projects" data-scroll-reveal className="section-space scroll-mt-20 border-t border-[var(--border)]">
+        <div className="section-wrap">
+          <div className="section-head">
+            <div>
+              <p className="eyebrow">03 · Projects</p>
+              <h2 className="section-title mt-3">Two builds, from real work.</h2>
+            </div>
+            <p className="section-intro">A full-stack AI web app, and an IoT and computer-vision capstone.</p>
           </div>
-          <p className="section-intro">A full-stack AI web app, and an IoT and computer-vision capstone.</p>
+          <div className="project-grid">
+            {projects.map((project) => <ProjectBlock key={project.id} project={project} />)}
+          </div>
         </div>
-        <div className="grid items-start gap-5 lg:grid-cols-2">
-          {projects.map((project) => <ProjectBlock key={project.id} project={project} />)}
-        </div>
-      </div>
-    </section>
+      </section>
+    </ImageLightboxProvider>
   );
 }

@@ -116,7 +116,7 @@ export default function Navbar() {
           <span className="brand-mark" aria-hidden="true">NA</span>
           <span>
             <span className="block text-sm font-semibold tracking-wide text-[var(--text-heading)] group-hover:text-[var(--accent)]">Niel Arthur</span>
-            <span className="block text-xs text-[var(--text-muted)]">Software · Data · IoT</span>
+            <span className="block text-xs text-[var(--text-muted)]">Software · Data · Full Stack</span>
           </span>
         </a>
 

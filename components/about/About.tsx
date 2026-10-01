@@ -10,7 +10,7 @@ const credentials = [
 
 export default function About() {
   return (
-    <section id="about" className="section-space scroll-mt-20 border-y border-[var(--border)] bg-[var(--bg-raised)]">
+    <section id="about" data-scroll-reveal className="section-space scroll-mt-20 border-y border-[var(--border)] bg-[var(--bg-raised)]">
       <div className="section-wrap">
         <div className="grid gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12">
           <div>

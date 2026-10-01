@@ -38,6 +38,7 @@ const certificates: Certificate[] = [
   { title: "Prompt Engineering with the OpenAI API", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Prompt Engineering with the OpenAI API.pdf" },
   { title: "IT Specialist: Python", issuer: "CertNexus", issuerLogo: "/certificate-issuers/certnexus.png", file: "PYTHON_CERT.pdf" },
   { title: "Software Engineering Principles in Python", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Software Engineering Principles in Python.pdf" },
+  { title: "Understanding Prompt Engineering", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Understanding Prompt Engineering.pdf" },
   { title: "Working with Hugging Face", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Working with Hugging Face.pdf" },
   { title: "Working with the OpenAI API", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Working with the OpenAI API.pdf" },
   { title: "Working with the OpenAI Responses API", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Working with the OpenAI Responses API.pdf" },
@@ -114,7 +115,7 @@ export default function Certificates() {
   const closeViewer = () => dialogRef.current?.close();
 
   return (
-    <section id="certificates" className="section-space scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-raised)]">
+    <section id="certificates" data-scroll-reveal className="section-space scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-raised)]">
       <div className="section-wrap">
         <div className="section-head">
           <div>

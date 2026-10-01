@@ -140,7 +140,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section-space scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-raised)]">
+    <section id="contact" data-scroll-reveal className="section-space scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-raised)]">
       <div className="section-wrap grid items-start gap-10 lg:grid-cols-[.8fr_1.2fr] lg:gap-16">
         <div>
           <p className="eyebrow">07 · Contact</p>

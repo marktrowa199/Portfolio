@@ -57,7 +57,7 @@ export default function ContributionActivity() {
   }, []);
 
   return (
-    <section id="contributions" ref={sectionRef} className="section-space scroll-mt-20">
+    <section id="contributions" ref={sectionRef} data-scroll-reveal className="section-space scroll-mt-20">
       <div className="section-wrap">
         <div className="section-head">
           <div>

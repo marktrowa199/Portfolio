@@ -20,6 +20,7 @@
   --accent-strong: #99f6e4;
   --accent-ink: #082c2a;
   --shadow-block: 0 12px 28px -20px rgb(0 0 0 / 58%);
+  --lightbox-mat: #0b1220;
   --font-body: var(--font-poppins), sans-serif;
   --font-code: var(--font-jetbrains-mono), monospace;
 }
@@ -42,6 +43,8 @@
   --accent-strong: #115e59;
   --accent-ink: #ffffff;
   --shadow-block: 0 10px 24px -20px rgb(15 23 42 / 28%);
+  /* The image viewer keeps a neutral mat so photographs read the same in either theme. */
+  --lightbox-mat: #dde5ee;
 }
 
 html {
@@ -93,7 +96,15 @@ a, button { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 767px) { .section-head { align-items: flex-start; flex-direction: column; } }
 .eyebrow { color: var(--accent); font-family: var(--font-code); font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; }
 .brick-lift { transition: transform 180ms ease, box-shadow 180ms ease; }
-.brick-lift:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -18px rgb(15 23 42 / 28%); }
+.brick-lift:hover, .brick-lift:focus-within { transform: translateY(-2px); box-shadow: var(--shadow-block); }
+
+/* Scroll entrances stay visible by default if JavaScript or IntersectionObserver is unavailable. */
+.has-scroll-reveal [data-scroll-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition: opacity 460ms cubic-bezier(.16, 1, .3, 1), transform 460ms cubic-bezier(.16, 1, .3, 1);
+}
+.has-scroll-reveal [data-scroll-reveal].is-visible { opacity: 1; transform: none; }
 
 .hero-build { background: var(--bg-main); }
 .focus-sheet { width: 100%; max-width: 34rem; margin-inline: auto; padding: .25rem 0 .25rem clamp(1rem, 4vw, 2.5rem); border-left: 1px solid var(--border); }
@@ -233,33 +244,55 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .project-shot { margin: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main); padding: .4rem; transition: border-color 180ms ease, transform 180ms ease; }
 .project-shot:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); transform: translateY(-1px); }
 .project-shot__img { display: block; width: 100%; height: auto; border-radius: 7px; }
-.project-shot--portrait .project-shot__img { width: auto; max-width: 100%; max-height: 26rem; margin-inline: auto; object-fit: contain; }
+.project-shot--portrait .project-shot__img { width: auto; max-width: 100%; max-height: 15rem; margin-inline: auto; object-fit: contain; }
+/* The whole frame is one button that opens the shared lightbox, so every project image
+   behaves the same way. Resetting the button surface keeps the existing frame untouched. */
+.project-shot__trigger { position: relative; display: block; width: 100%; cursor: zoom-in; }
+.project-shot--portrait .project-shot__trigger { width: fit-content; max-width: 100%; margin-inline: auto; }
+.project-shot__zoom { position: absolute; right: .55rem; bottom: .55rem; display: grid; width: 2rem; height: 2rem; place-items: center; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-main); color: var(--text-muted); opacity: 0; transform: translateY(4px); transition: opacity 180ms ease, transform 180ms ease, color 180ms ease, border-color 180ms ease; }
+.project-shot__trigger:hover .project-shot__zoom,
+.project-shot__trigger:focus-visible .project-shot__zoom { border-color: var(--accent); color: var(--accent); opacity: 1; transform: none; }
+/* Touch devices never fire hover, so the affordance stays visible there. */
+@media (hover: none) { .project-shot__zoom { opacity: .9; transform: none; } }
 .project-shot--empty { display: grid; place-items: center; gap: .3rem; border-style: dashed; padding: clamp(1.75rem, 5vw, 2.75rem) 1rem; text-align: center; }
 .project-shot__label { color: var(--text-muted); font-size: .85rem; font-weight: 600; }
 .project-shot__note { color: var(--text-dim); font-size: .78rem; }
+
+/* Supporting project photos that belong to a card rather than standing on their own. The
+   frames stay on the shared `.project-shot` styling, so they read as one family with the
+   hero capture above them. Side by side from the desktop breakpoint up; stacked below,
+   where a half-width card would squeeze two thumbnails into unreadable slivers. */
+.project-gallery { display: grid; gap: .6rem; }
+.project-gallery__label { color: var(--text-dim); font-size: .72rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+.project-gallery__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: .6rem; }
+.project-gallery__item { min-width: 0; margin: 0; }
+@media (min-width: 1024px) { .project-gallery__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 .project-block { --project-color: var(--brick-blue); min-width: 0; overflow: hidden; border: 1px solid var(--border); border-top: 2px solid var(--project-color); border-radius: 12px; background: var(--bg-raised); box-shadow: var(--shadow-block); }
 .project-block--yellow { --project-color: var(--brick-yellow); }
 .project-block--red { --project-color: var(--brick-red); }
 .project-block--green { --project-color: var(--brick-green); }
-.project-block__header { min-height: 2.5rem; display: flex; align-items: center; gap: 1rem; padding: .65rem 1.25rem 0; color: var(--project-color); }
+.project-block__header { min-height: 2.25rem; display: flex; align-items: center; gap: 1rem; padding: .55rem 1rem 0; color: var(--project-color); }
 /* The screenshot sits directly under the card's coloured top edge, so drop its own
    top corners to avoid a doubled radius. */
-.project-block > .project-shot { margin: 1rem 1.25rem 0; border-top-left-radius: 0; border-top-right-radius: 0; }
-.project-block__body { display: grid; gap: 1rem; padding: clamp(1rem, 2.4vw, 1.35rem); }
+.project-block > .project-shot { margin: .75rem 1rem 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+.project-block__body { display: grid; gap: .85rem; padding: clamp(.9rem, 1.6vw, 1.1rem); }
 .project-block__tagline { margin-top: .4rem; color: var(--accent); font-size: .92rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.4; }
 .project-fact h4 { color: var(--text-dim); font-size: .72rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
-.project-fact p, .project-fact li:not(.project-technology) { margin-top: .55rem; color: var(--text-muted); font-size: .94rem; line-height: 1.55; }
-.project-fact ul:not(.project-tech-list) { display: grid; gap: .5rem; margin-top: .55rem; padding-left: 1.2rem; list-style: disc; }
+.project-fact p, .project-fact li:not(.project-technology) { margin-top: .45rem; color: var(--text-muted); font-size: .9rem; line-height: 1.5; }
+.project-fact ul:not(.project-tech-list) { display: grid; gap: .35rem; margin-top: .45rem; padding-left: 1.1rem; list-style: disc; }
 .project-fact ul:not(.project-tech-list) li { padding-left: .15rem; }
 .project-fact ul:not(.project-tech-list) li::marker { color: var(--project-color); }
 .project-tech-list { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .6rem; padding: 0; list-style: none; }
-.project-technology { display: inline-flex; min-height: 2rem; align-items: center; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .32rem .65rem; color: var(--text-main); font-size: .85rem; }
+.project-technology { display: inline-flex; min-height: 1.85rem; align-items: center; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .28rem .55rem; color: var(--text-main); font-size: .8rem; }
 .project-block__actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .15rem; }
-.project-demo-link { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: .5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .65rem .9rem; color: var(--text-heading); font-size: .88rem; font-weight: 600; line-height: 1.3; text-decoration: none; transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease; }
-.project-demo-link:hover { border-color: var(--accent); background: var(--bg-raised); color: var(--accent); }
+.project-demo-link { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: .5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .65rem .9rem; color: var(--text-heading); font-size: .88rem; font-weight: 600; line-height: 1.3; text-decoration: none; transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease, transform 150ms ease; }
+.project-demo-link:hover { transform: translateY(-1px); border-color: var(--accent); background: var(--bg-raised); color: var(--accent); }
+.project-demo-link:active { transform: translateY(0) scale(.99); }
 .project-demo-link--primary { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 650; }
 .project-demo-link--primary:hover { border-color: var(--accent-strong); background: var(--accent-strong); color: var(--accent-ink); }
+.project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 1rem; }
+@media (max-width: 767px) { .project-grid { grid-template-columns: minmax(0, 1fr); gap: .9rem; } }
 
 .contribution-panel { min-height: 15rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); padding: clamp(1rem, 3vw, 1.5rem); }
 .contribution-topline, .contribution-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -348,9 +381,51 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .certificate-viewer__fallback { flex: 0 0 auto; border-top: 1px solid var(--border); padding: .65rem 1rem; color: var(--text-dim); font-size: .78rem; text-align: center; }
 .certificate-viewer__fallback a { color: var(--accent); text-underline-offset: 3px; }
 
+/* Shared image lightbox. One viewer serves every project image: the scrim fades in while
+   the panel rises a few pixels, and the image itself cross-fades once its bytes land.
+   The stage keeps its own neutral mat so photographs read the same in either theme. */
+.lightbox { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; padding: clamp(.6rem, 2.5vw, 2.5rem); background: rgb(2 6 23 / 0%); transition: background-color 260ms ease; }
+.lightbox[data-state="open"] { background: rgb(2 6 23 / 88%); }
+.lightbox__panel { display: flex; width: 100%; max-width: 80rem; max-height: 100%; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); box-shadow: 0 28px 64px -34px rgb(0 0 0 / 72%); opacity: 0; transform: scale(.97) translateY(8px); transition: opacity 240ms cubic-bezier(.16, 1, .3, 1), transform 260ms cubic-bezier(.16, 1, .3, 1); }
+.lightbox[data-state="open"] .lightbox__panel { opacity: 1; transform: none; }
+.lightbox__header { display: flex; min-height: 3.5rem; flex: 0 0 auto; align-items: center; gap: .9rem; border-bottom: 1px solid var(--border); padding: .6rem .6rem .6rem 1rem; }
+.lightbox__title { min-width: 0; flex: 1 1 auto; overflow: hidden; color: var(--text-heading); font-size: .92rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.lightbox__counter { flex: 0 0 auto; color: var(--text-dim); font-size: .8rem; font-variant-numeric: tabular-nums; }
+.lightbox__close { display: grid; width: 2.6rem; height: 2.6rem; flex: 0 0 auto; place-items: center; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-soft); color: var(--text-main); transition: border-color 160ms ease, color 160ms ease; }
+.lightbox__close:hover { border-color: var(--accent); color: var(--accent); }
+.lightbox__close svg { width: 1.15rem; height: 1.15rem; }
+.lightbox__stage { position: relative; display: flex; min-height: 0; flex: 1 1 auto; overflow: hidden; background: var(--lightbox-mat); padding: .75rem; }
+/* `fill` resolves against the nearest positioned ancestor, so the fitted image needs its
+   own box: that keeps the stage's padding honoured and the letterboxing honest. */
+.lightbox__canvas { position: relative; display: flex; min-width: 0; min-height: 0; flex: 1 1 auto; }
+.lightbox__stage.is-zoomed { display: block; overflow: auto; overscroll-behavior: contain; cursor: zoom-out; scrollbar-color: var(--border) transparent; }
+.lightbox__img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; opacity: 0; transition: opacity 220ms ease; user-select: none; -webkit-user-drag: none; }
+.lightbox__img.is-ready { opacity: 1; }
+.lightbox__stage.is-zoomed .lightbox__img { max-width: none; max-height: none; }
+.lightbox__spinner { position: absolute; top: 50%; left: 50%; width: 2rem; height: 2rem; margin: -1rem 0 0 -1rem; border: 2px solid rgb(148 163 184 / 28%); border-top-color: var(--accent); border-radius: 50%; animation: lightbox-spin 700ms linear infinite; }
+.lightbox__footer { display: flex; min-height: 3.35rem; flex: 0 0 auto; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem; border-top: 1px solid var(--border); padding: .55rem .75rem; }
+.lightbox__pager { display: flex; align-items: center; gap: .5rem; }
+.lightbox__action { display: inline-flex; min-height: 2.6rem; align-items: center; justify-content: center; gap: .45rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .5rem .85rem; color: var(--text-heading); font-size: .85rem; font-weight: 600; line-height: 1.2; transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease; }
+.lightbox__action:hover { border-color: var(--accent); color: var(--accent); }
+.lightbox__action svg { width: 1rem; height: 1rem; }
+@keyframes lightbox-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 639px) {
+  /* Full-bleed viewer on phones: no scrim to tap, so the header X and Escape close it. */
+  .lightbox { padding: 0; }
+  .lightbox__panel { border-radius: 0; border-inline: 0; }
+  .lightbox__footer { flex-direction: column; align-items: stretch; }
+  .lightbox__footer > .lightbox__action { width: 100%; }
+  .lightbox__pager .lightbox__action { flex: 1 1 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lightbox, .lightbox__panel, .lightbox__img { transition: none; }
+  .lightbox__spinner { animation-duration: 1.6s; }
+}
+
 @media (max-width: 1023px) { .certificate-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 639px) {
-  .project-shot--portrait .project-shot__img { max-height: 22rem; }
+  .project-shot--portrait .project-shot__img { max-height: 13rem; }
   .certificate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
   .certificate-card { min-height: 9rem; }
   .certificate-viewer { width: 100vw; height: 100dvh; max-height: 100dvh; border-radius: 0; }
@@ -377,11 +452,13 @@ a, button { -webkit-tap-highlight-color: transparent; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .has-scroll-reveal [data-scroll-reveal] { opacity: 1; transform: none; transition: none; }
   body, .site-navbar, .hero-build a { transition-duration: 0ms; }
   .brick-lift { transition: none; }
-  .brick-lift:hover { transform: none; }
+  .brick-lift:hover, .brick-lift:focus-within { transform: none; }
   .hero-build a:hover { transform: none; }
-  .tech-card, .tech-marquee__toggle { transition: none; }
+  .tech-card, .tech-marquee__toggle, .project-demo-link { transition: none; }
+  .project-demo-link:hover, .project-demo-link:active { transform: none; }
   .tech-card:hover { transform: none; }
 }
 

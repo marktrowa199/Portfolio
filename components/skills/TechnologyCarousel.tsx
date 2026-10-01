@@ -78,7 +78,7 @@ export default function TechnologyCarousel() {
   const [held, setHeld] = useState(false);
 
   return (
-    <section id="skills" className="section-space scroll-mt-20">
+    <section id="skills" data-scroll-reveal className="section-space scroll-mt-20">
       <div className="section-wrap">
         <div className="section-head">
           <div>

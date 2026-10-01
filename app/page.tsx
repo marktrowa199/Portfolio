@@ -1,4 +1,5 @@
 import Navbar from "@/components/navbar/Navbar";
+import ScrollReveal from "@/components/ScrollReveal";
 import Hero from "@/components/hero/Hero";
 import About from "@/components/about/About";
 import TechnologyCarousel from "@/components/skills/TechnologyCarousel";
@@ -25,6 +26,7 @@ export default function Home() {
       <Navbar />
 
       <main className="flex-grow">
+        <ScrollReveal />
         <Hero />
         <About />
         <Timeline />

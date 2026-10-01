@@ -97,7 +97,7 @@ function MilestoneList({ items }: { items: Milestone[] }) {
 
 export default function Timeline() {
   return (
-    <div className="section-space border-t border-[var(--border)]">
+    <div data-scroll-reveal className="section-space border-t border-[var(--border)]">
       {/* Experience and Education remain independent sections with their own anchors and
           headings; they simply sit side by side above the lg breakpoint, so the pair costs
           one screen of scrolling instead of two. */}

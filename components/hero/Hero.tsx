@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Mascot } from "page-mascot";
 import SignalCanvas from "./SignalCanvas";
 import { ArrowRight, Check, Copy, Github, GraduationCap, Linkedin, MapPin, Server } from "lucide-react";
 
@@ -20,18 +21,30 @@ export default function Hero() {
 
   return (
     <section id="home" className="hero-build relative isolate flex flex-col justify-center py-20 sm:py-24">
-      <div className="section-wrap grid w-full items-center gap-10 lg:grid-cols-[.92fr_1.08fr] lg:gap-14">
-        <div className="max-w-2xl">
-          <p className="eyebrow">Portfolio · 2026</p>
+      <div className="section-wrap grid w-full grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[.92fr_1.08fr] lg:gap-14">
+        <div className="w-full min-w-0 max-w-2xl">
+          <div className="flex items-center justify-between gap-4">
+            
+           
+          </div>
+          <Mascot
+              directions="/mascots/niel-directions.webp"
+              reactions="/mascots/niel-reactions.webp"
+              size={250}
+              label="Niel"
+            />
           <h1 className="mt-4 text-[clamp(2.6rem,4.9vw,4.5rem)] font-semibold leading-[1.04] tracking-[-.03em]">
             Niel Arthur <span className="text-[var(--accent)]">B. Rocacurva</span>
           </h1>
+            
           <p className="mt-5 text-xl font-semibold leading-snug text-[var(--text-heading)] sm:text-2xl">
             Aspiring Software Developer / IT Professional
           </p>
+         
           <p className="mt-2 text-base font-medium text-[var(--text-muted)] sm:text-lg">
             Software development · AI · Data analytics · IT operations
           </p>
+          
           <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-[var(--text-muted)]">
             I build practical technology projects across software, AI, and data — a Python and SQL
             job-search assistant, an IoT crop-disease robot, and the day-to-day IT operations work
@@ -39,6 +52,7 @@ export default function Hero() {
             University, looking for an Associate or Junior Software Engineer role where I can keep
             learning and contribute to real engineering work.
           </p>
+           
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <a href="#projects" className="inline-flex min-h-12 items-center gap-2 rounded-md bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-[var(--accent-ink)] shadow-[0_4px_10px_-6px_rgb(0_0_0_/_45%)] transition hover:-translate-y-0.5 hover:bg-[var(--accent-strong)]">
               View My Projects <ArrowRight aria-hidden="true" className="h-4 w-4" />
@@ -46,11 +60,13 @@ export default function Hero() {
             <a href="#contact" className="inline-flex min-h-12 items-center rounded-md border border-[var(--border)] bg-[var(--bg-raised)] px-5 py-3 text-sm font-semibold text-[var(--text-heading)] transition hover:border-[var(--accent)] hover:text-[var(--accent)]">
               Contact Me
             </a>
+          
             <button type="button" onClick={copyEmail} className="inline-flex min-h-12 items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-[var(--text-muted)] transition hover:text-[var(--accent)]" aria-live="polite">
               {copyState === "copied" ? <Check aria-hidden="true" className="h-4 w-4" /> : <Copy aria-hidden="true" className="h-4 w-4" />}
               <span>{copyState === "copied" ? "Email copied" : copyState === "error" ? "Copy unavailable" : "Copy email"}</span>
             </button>
           </div>
+          
           <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[var(--border)] pt-5 text-sm text-[var(--text-muted)]">
             <a className="inline-flex min-h-11 items-center gap-2 hover:text-[var(--accent)]" href="https://github.com/marktrowa199" target="_blank" rel="noreferrer" aria-label="GitHub profile (opens in a new tab)">
               <Github aria-hidden="true" className="h-4 w-4" /> GitHub
@@ -59,6 +75,7 @@ export default function Hero() {
               <Linkedin aria-hidden="true" className="h-4 w-4" /> LinkedIn
             </a>
             <span className="text-[var(--text-dim)]">San Jose Del Monte Bulacan</span>
+             
           </div>
         </div>
         <SignalCanvas />
