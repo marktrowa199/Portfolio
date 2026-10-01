@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Certificate = {
   title: string;
@@ -60,9 +61,50 @@ function CertificateIssuer({ certificate }: { certificate: Certificate }) {
   ) : null;
 }
 
+function useCertificatesPerPage() {
+  // Read once on mount, then track the breakpoint so the page size matches the
+  // column count the grid will actually render.
+  const [perPage, setPerPage] = useState(6);
+
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)");
+    const mobile = window.matchMedia("(max-width: 639px)");
+
+    const update = () => {
+      if (mobile.matches) setPerPage(2);
+      else if (query.matches) setPerPage(6);
+      else setPerPage(4);
+    };
+
+    update();
+    query.addEventListener("change", update);
+    mobile.addEventListener("change", update);
+    return () => {
+      query.removeEventListener("change", update);
+      mobile.removeEventListener("change", update);
+    };
+  }, []);
+
+  return perPage;
+}
+
 export default function Certificates() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [selected, setSelected] = useState<Certificate | null>(null);
+  const perPage = useCertificatesPerPage();
+  const [page, setPage] = useState(0);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  const totalPages = Math.max(1, Math.ceil(certificates.length / perPage));
+  // Shrinking the viewport can leave the reader past the last page.
+  const safePage = Math.min(page, totalPages - 1);
+  const visible = certificates.slice(safePage * perPage, safePage * perPage + perPage);
+
+  // Returning to the top of the section keeps the new group in view on tall screens.
+  const goToPage = (next: number) => {
+    setPage(Math.max(0, Math.min(next, totalPages - 1)));
+    gridRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  };
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -74,14 +116,18 @@ export default function Certificates() {
   return (
     <section id="certificates" className="section-space scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-raised)]">
       <div className="section-wrap">
-        <div className="mb-9 max-w-3xl sm:mb-12">
-          <p className="eyebrow">05 · Certificates</p>
-          <h2 className="section-title mt-4">Certificates</h2>
-          <p className="section-intro mt-4">Completed courses, certifications, and learning events. Select any certificate to view it.</p>
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">05 · Certificates</p>
+            <h2 className="section-title mt-3">Certificates</h2>
+          </div>
+          <p className="section-intro">
+            {certificates.length} completed courses, certifications, and learning events. Select any certificate to view it.
+          </p>
         </div>
 
-        <div className="certificate-grid">
-          {certificates.map((certificate) => (
+        <div className="certificate-grid" ref={gridRef}>
+          {visible.map((certificate) => (
             <button
               className="certificate-card"
               type="button"
@@ -99,6 +145,35 @@ export default function Certificates() {
             </button>
           ))}
         </div>
+
+        {totalPages > 1 && (
+          <nav className="certificate-pager" aria-label="Certificate pages">
+            <button
+              type="button"
+              className="certificate-pager__button"
+              onClick={() => goToPage(safePage - 1)}
+              disabled={safePage === 0}
+            >
+              <ArrowLeft aria-hidden="true" className="h-4 w-4" /> Previous
+            </button>
+
+            <p className="certificate-pager__status" role="status" aria-live="polite">
+              <span className="certificate-pager__count">{safePage + 1} / {totalPages}</span>
+              <span className="certificate-pager__range">
+                Showing {safePage * perPage + 1}–{Math.min((safePage + 1) * perPage, certificates.length)} of {certificates.length}
+              </span>
+            </p>
+
+            <button
+              type="button"
+              className="certificate-pager__button"
+              onClick={() => goToPage(safePage + 1)}
+              disabled={safePage >= totalPages - 1}
+            >
+              Next <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </button>
+          </nav>
+        )}
       </div>
 
       {selected && (

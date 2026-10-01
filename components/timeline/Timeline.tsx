@@ -97,28 +97,29 @@ function MilestoneList({ items }: { items: Milestone[] }) {
 
 export default function Timeline() {
   return (
-    <>
-      <section id="experience" className="section-space scroll-mt-20">
-        <div className="section-wrap grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:gap-16">
-          <div>
-            <p className="eyebrow">01 · Experience</p>
-            <h2 className="section-title mt-4">Experience</h2>
-            <p className="section-intro mt-4">Work experience and hands-on project work.</p>
+    <div className="section-space border-t border-[var(--border)]">
+      {/* Experience and Education remain independent sections with their own anchors and
+          headings; they simply sit side by side above the lg breakpoint, so the pair costs
+          one screen of scrolling instead of two. */}
+      <div className="section-wrap grid items-start gap-8 lg:grid-cols-[1.15fr_1fr] lg:gap-10">
+        <section id="experience" className="scroll-mt-20">
+          <p className="eyebrow">01 · Experience</p>
+          <h2 className="section-title mt-3">Experience</h2>
+          <p className="mt-2 text-sm text-[var(--text-dim)]">Work experience and hands-on project work.</p>
+          <div className="mt-5">
+            <MilestoneList items={experience} />
           </div>
-          <MilestoneList items={experience} />
-        </div>
-      </section>
+        </section>
 
-      <section id="education" className="section-space scroll-mt-20 border-t border-[var(--border)]">
-        <div className="section-wrap grid gap-8 lg:grid-cols-[.7fr_1.3fr] lg:gap-16">
-          <div>
-            <p className="eyebrow">02 · Education</p>
-            <h2 className="section-title mt-4">Education</h2>
-            <p className="section-intro mt-4">Academic background and where it started.</p>
+        <section id="education" className="scroll-mt-20">
+          <p className="eyebrow">02 · Education</p>
+          <h2 className="section-title mt-3">Education</h2>
+          <p className="mt-2 text-sm text-[var(--text-dim)]">Academic background.</p>
+          <div className="mt-5">
+            <MilestoneList items={education} />
           </div>
-          <MilestoneList items={education} />
-        </div>
-      </section>
-    </>
+        </section>
+      </div>
+    </div>
   );
 }

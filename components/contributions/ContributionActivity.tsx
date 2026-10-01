@@ -59,10 +59,12 @@ export default function ContributionActivity() {
   return (
     <section id="contributions" ref={sectionRef} className="section-space scroll-mt-20">
       <div className="section-wrap">
-        <div className="mb-8 max-w-3xl sm:mb-10">
-          <p className="eyebrow">06 · GitHub Activity</p>
-          <h2 className="section-title mt-4">Contribution Activity</h2>
-          <p className="section-intro mt-4">A snapshot of my public activity and contributions on GitHub. Switch years, and hover any day for its date and count.</p>
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">06 · GitHub Activity</p>
+            <h2 className="section-title mt-3">Contribution Activity</h2>
+          </div>
+          <p className="section-intro">Public activity on GitHub. Switch years, and hover any day for its date and count.</p>
         </div>
         {Calendar ? <Calendar /> : loadFailed ? (
           <div className="contribution-panel contribution-error" role="status">

@@ -65,10 +65,12 @@ export default function SkillsBento() {
   return (
     <section id="skills" className="section-space scroll-mt-20">
       <div className="section-wrap">
-        <div className="mb-9 max-w-3xl sm:mb-12">
-          <p className="eyebrow">04 · Skills</p>
-          <h2 className="section-title mt-4">A toolkit shaped by what I’ve built.</h2>
-          <p className="section-intro mt-4">Grouped by what each one is actually used for.</p>
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">04 · Skills</p>
+            <h2 className="section-title mt-3">A toolkit shaped by what I’ve built.</h2>
+          </div>
+          <p className="section-intro">Grouped by what each one is actually used for.</p>
         </div>
         <div className="skill-wall">
           {groups.map((group) => (

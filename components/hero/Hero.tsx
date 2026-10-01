@@ -19,7 +19,7 @@ export default function Hero() {
   };
 
   return (
-    <section id="home" className="hero-build relative isolate flex flex-col justify-center py-28 sm:py-32">
+    <section id="home" className="hero-build relative isolate flex flex-col justify-center py-20 sm:py-24">
       <div className="section-wrap grid w-full items-center gap-10 lg:grid-cols-[.92fr_1.08fr] lg:gap-14">
         <div className="max-w-2xl">
           <p className="eyebrow">Portfolio · 2026</p>
@@ -63,7 +63,7 @@ export default function Hero() {
         </div>
         <SignalCanvas />
       </div>
-      <div className="section-wrap mt-14 border-t border-[var(--border)] pt-7">
+      <div className="section-wrap mt-10 border-t border-[var(--border)] pt-5">
         <h2 className="quick-scan-heading">At a glance</h2>
         <div className="grid gap-3 md:grid-cols-3">
           <article className="quick-scan-block">

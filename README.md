@@ -28,10 +28,10 @@ Built with **React**, **Next.js 14 (App Router)**, **Tailwind CSS**, and **TypeS
 ## Design System
 
 - **Palette**: Slate surfaces, navy text, and a restrained teal accent, with the same hierarchy in dark mode.
-- **Layout**: Open project and experience content with light dividers; modular grouping supports scanning without turning every item into a card.
+- **Layout**: Open project and experience content with light dividers; modular grouping supports scanning without turning every item into a card. Section headings sit in a label/title + supporting-line row, and Experience and Education share one two-column band, to keep the page compact.
 - **Theme support**: Persistent light and dark modes use shared CSS variables for colors, surfaces, text, and depth.
-- **Portfolio focus**: The hero summarizes software, data, IoT, and systems work; the project section leads with AGROSENTINEL.
-- **Interactions**: Responsive navigation, resume preview and download, theme toggle, and email/phone copy feedback.
+- **Portfolio focus**: The hero summarizes software, data, IoT, and systems work; the project section leads with JobUp.
+- **Interactions**: Responsive navigation with a scroll-spy active indicator, anchor links, smooth scrolling, back-to-top, resume preview and download, theme toggle, email/phone copy feedback, and paginated certificates (6 desktop / 4 tablet / 2 mobile per page).
 
 ---
 
@@ -59,12 +59,14 @@ portfolio/
 │   │   ├── Navbar.tsx            # Desktop/mobile navigation and resume preview
 │   │   └── ThemeToggle.tsx       # Sun/Moon theme switcher persisted in localStorage
 │   ├── projects/
-│   │   └── Projects.tsx          # JobUp, AGROSENTINEL
+│   │   ├── Projects.tsx          # JobUp, AGROSENTINEL
+│   │   └── ProjectScreenshot.tsx # Responsive project image, with a placeholder fallback
 │   ├── skills/
 │   │   └── SkillsBento.tsx       # Grouped skills grounded in source projects
 │   └── timeline/
 │       └── Timeline.tsx          # Concentrix Practicum, AGROSENTINEL Capstone, OLFU Degree
 ├── public/
+│   ├── images/                   # Drop jobup-screenshot.png here (see its README)
 │   ├── resume.pdf
 │   └── resume-placeholder.txt
 ├── tailwind.config.ts            # Tailwind theme and font variables
