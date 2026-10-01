@@ -31,7 +31,7 @@ Built with **React**, **Next.js 14 (App Router)**, **Tailwind CSS**, and **TypeS
 - **Layout**: Open project and experience content with light dividers; modular grouping supports scanning without turning every item into a card. Section headings sit in a label/title + supporting-line row, and Experience and Education share one two-column band, to keep the page compact.
 - **Theme support**: Persistent light and dark modes use shared CSS variables for colors, surfaces, text, and depth.
 - **Portfolio focus**: The hero summarizes software, data, IoT, and systems work; the project section leads with JobUp.
-- **Interactions**: Responsive navigation with a scroll-spy active indicator, anchor links, smooth scrolling, back-to-top, resume preview and download, theme toggle, email/phone copy feedback, and paginated certificates (6 desktop / 4 tablet / 2 mobile per page).
+- **Interactions**: Responsive navigation with a scroll-spy active indicator, anchor links, smooth scrolling, back-to-top, resume preview and download, theme toggle, email/phone copy feedback, paginated certificates (6 desktop / 4 tablet / 2 mobile per page), and a pure-CSS technology marquee that pauses on hover, on keyboard focus, and on demand.
 
 ---
 
@@ -62,7 +62,7 @@ portfolio/
 │   │   ├── Projects.tsx          # JobUp, AGROSENTINEL
 │   │   └── ProjectScreenshot.tsx # Responsive project image, with a placeholder fallback
 │   ├── skills/
-│   │   └── SkillsBento.tsx       # Grouped skills grounded in source projects
+│   │   └── TechnologyCarousel.tsx # Infinite CSS marquee of the tech stack
 │   └── timeline/
 │       └── Timeline.tsx          # Concentrix Practicum, AGROSENTINEL Capstone, OLFU Degree
 ├── public/

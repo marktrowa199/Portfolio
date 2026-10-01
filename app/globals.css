@@ -132,20 +132,81 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .about-detail-list h3 { font-size: .88rem; font-weight: 650; }
 .about-detail-list p { margin-top: .2rem; color: var(--text-muted); font-size: .84rem; line-height: 1.5; }
 
-.skill-wall { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; align-items: start; }
-.skill-module { --module-color: var(--brick-blue); overflow: hidden; border: 1px solid var(--border); border-radius: 11px; background: var(--bg-raised); box-shadow: var(--shadow-block); }
-.skill-module--yellow { --module-color: var(--brick-yellow); }
-.skill-module--red { --module-color: var(--brick-red); }
-.skill-module--green { --module-color: var(--brick-green); }
-.skill-module { padding: 1rem clamp(.9rem, 1.6vw, 1.25rem) .5rem; }
-.skill-module__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; padding: 0 0 .6rem; color: var(--module-color); }
-.skill-module__header h3 { min-width: 0; color: var(--text-heading); font-size: 1rem; font-weight: 650; letter-spacing: -.02em; line-height: 1.35; }
-.skill-module__subtitle { color: var(--text-muted); font-size: .84rem; line-height: 1.5; }
-.skill-module__items { display: grid; grid-template-columns: minmax(0, 1fr); margin-top: .35rem; }
-.skill-module__items li { display: grid; min-width: 0; gap: .2rem; border-top: 1px solid var(--border); padding: .6rem 0; color: var(--text-main); font-size: .9rem; line-height: 1.45; }
-.skill-module__name { overflow-wrap: anywhere; font-weight: 600; line-height: 1.4; }
-.skill-module__tag { width: fit-content; max-width: 100%; border-radius: 4px; background: var(--bg-soft); padding: .16rem .45rem; color: var(--module-color); font-size: .77rem; font-weight: 600; line-height: 1.4; overflow-wrap: anywhere; }
-.skill-module__note { color: var(--text-muted); font-size: .85rem; line-height: 1.55; overflow-wrap: anywhere; }
+/* ---------------------------------------------------------------- technology carousel
+   A pure-CSS infinite marquee. No animation library and no per-frame JavaScript:
+   the only thing that moves is a composited `transform`, which runs off the main
+   thread and causes zero React re-renders.
+
+   Seamlessness: the track holds two identical groups. Each group carries its own
+   trailing padding equal to the inter-item gap, so the two groups are exactly
+   equal in width and the -50% keyframe step moves precisely one group width.
+   Nothing is skipped, repeated, or left blank at the wrap point. */
+.tech-marquee {
+  position: relative;
+  overflow: hidden;
+  /* Let vertical swipes scroll the page while the marquee stays put. */
+  touch-action: pan-y;
+  padding-block: .35rem;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 3.5rem, #000 calc(100% - 3.5rem), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 3.5rem, #000 calc(100% - 3.5rem), transparent);
+}
+.tech-marquee__track { display: flex; width: max-content; animation: tech-marquee-scroll 70s linear infinite; will-change: transform; }
+.tech-marquee__group { display: flex; gap: .75rem; padding-right: .75rem; }
+
+@keyframes tech-marquee-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Hold on hover, on keyboard focus, and via the manual toggle. Hover/focus live in
+   CSS so they need no state; only the toggle button re-renders, and only on click. */
+.tech-marquee:hover .tech-marquee__track,
+.tech-marquee:focus-within .tech-marquee__track,
+.tech-marquee--held .tech-marquee__track { animation-play-state: paused; }
+
+.tech-card {
+  display: grid;
+  min-width: 13.5rem;
+  align-content: start;
+  gap: .5rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-raised);
+  padding: .85rem 1rem .9rem;
+  transition: border-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+.tech-card:hover { transform: scale(1.025); border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); box-shadow: var(--shadow-block); }
+.tech-card__head { display: flex; align-items: center; gap: .6rem; }
+.tech-card__icon { display: grid; width: 2rem; height: 2rem; flex: 0 0 auto; place-items: center; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-main); color: var(--accent); }
+.tech-card__monogram { font-family: var(--font-jetbrains-mono), monospace; font-size: .82rem; font-weight: 700; letter-spacing: -.02em; line-height: 1; }
+.tech-card__name { color: var(--text-heading); font-size: .95rem; font-weight: 650; letter-spacing: -.01em; line-height: 1.25; }
+.tech-card__note { color: var(--text-muted); font-size: .8rem; line-height: 1.45; }
+
+.tech-marquee__controls { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-top: 1rem; }
+.tech-marquee__toggle { display: inline-flex; min-height: 2.5rem; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-main); padding: .5rem .9rem; color: var(--text-heading); font-size: .85rem; font-weight: 600; transition: border-color 150ms ease, color 150ms ease; }
+.tech-marquee__toggle:hover { border-color: var(--accent); color: var(--accent); }
+.tech-marquee__hint { color: var(--text-dim); font-size: .8rem; line-height: 1.5; }
+
+/* Reduced motion: no continuous movement at all. The duplicate group is hidden and
+   the single real group wraps into a static, readable grid. The pause toggle is
+   removed because there is no motion left to control. */
+@media (prefers-reduced-motion: reduce) {
+  .tech-marquee { overflow: visible; padding-block: 0; -webkit-mask-image: none; mask-image: none; }
+  .tech-marquee__track { width: auto; animation: none; transform: none; }
+  .tech-marquee__group { flex-wrap: wrap; padding-right: 0; }
+  .tech-marquee__group[aria-hidden="true"] { display: none; }
+  .tech-marquee__controls { display: none; }
+  .tech-card { min-width: 0; flex: 1 1 13rem; }
+  .tech-card:hover { transform: none; }
+}
+
+@media (max-width: 639px) {
+  .tech-card { min-width: 11.5rem; padding: .7rem .8rem .75rem; }
+  .tech-card__name { font-size: .9rem; }
+  .tech-card__note { font-size: .76rem; }
+  .tech-marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.75rem, #000 calc(100% - 1.75rem), transparent); mask-image: linear-gradient(90deg, transparent, #000 1.75rem, #000 calc(100% - 1.75rem), transparent); }
+  .tech-marquee__toggle { flex: 1 1 auto; }
+}
 
 .journey-bricks { display: grid; gap: .5rem; }
 .journey-brick { --journey-color: var(--brick-blue); display: grid; grid-template-columns: minmax(5.6rem, .34fr) 1fr; gap: .9rem; align-items: stretch; }
@@ -312,24 +373,14 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .journey-company__logo { width: 8rem; min-height: 3rem; }
 }
 
-@media (min-width: 960px) {
-  .skill-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-/* Five categories land as 2+2+1 in the two-column range, so let the last one run
-   full width instead of leaving a half-empty row. */
-@media (min-width: 960px) and (max-width: 1279px) {
-  .skill-wall > :last-child { grid-column: 1 / -1; }
-}
-@media (min-width: 1280px) {
-  .skill-wall { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   body, .site-navbar, .hero-build a { transition-duration: 0ms; }
   .brick-lift { transition: none; }
   .brick-lift:hover { transform: none; }
   .hero-build a:hover { transform: none; }
+  .tech-card, .tech-marquee__toggle { transition: none; }
+  .tech-card:hover { transform: none; }
 }
 
 .contact-detail-label { color: var(--text-dim); font-size: .75rem; font-weight: 650; letter-spacing: .08em; text-transform: uppercase; }

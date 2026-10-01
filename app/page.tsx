@@ -1,7 +1,7 @@
 import Navbar from "@/components/navbar/Navbar";
 import Hero from "@/components/hero/Hero";
 import About from "@/components/about/About";
-import SkillsBento from "@/components/skills/SkillsBento";
+import TechnologyCarousel from "@/components/skills/TechnologyCarousel";
 import Certificates from "@/components/certificates/Certificates";
 import Projects from "@/components/projects/Projects";
 import Timeline from "@/components/timeline/Timeline";
@@ -29,7 +29,7 @@ export default function Home() {
         <About />
         <Timeline />
         <Projects />
-        <SkillsBento />
+        <TechnologyCarousel />
         <Certificates />
         <ContributionActivity />
         <Contact />
