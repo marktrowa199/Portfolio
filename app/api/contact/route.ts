@@ -120,6 +120,16 @@ export async function POST(request: Request) {
   const gmailUser = process.env.CONTACT_GMAIL_USER?.trim();
   const gmailAppPassword = process.env.CONTACT_GMAIL_APP_PASSWORD?.replace(/\s/g, "");
   if (!gmailUser || !gmailAppPassword) {
+    // The visitor only ever sees a generic message, so this log is the only way to tell a
+    // missing configuration apart from a genuine SMTP outage. Name the missing variable.
+    const missing = [
+      !gmailUser && "CONTACT_GMAIL_USER",
+      !gmailAppPassword && "CONTACT_GMAIL_APP_PASSWORD",
+    ].filter(Boolean);
+    console.error(
+      `Contact form is not configured: missing ${missing.join(" and ")}. ` +
+        "Copy .env.example to .env.local, fill in the values, then restart the server."
+    );
     return jsonResponse({ error: "Email delivery is not configured." }, 503);
   }
 
