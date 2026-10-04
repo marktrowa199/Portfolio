@@ -113,10 +113,9 @@ export default function Navbar() {
     <header className={`site-navbar fixed inset-x-0 top-0 z-50 h-20 border-b transition-colors duration-200 ${isScrolled ? "is-scrolled border-[var(--border)] bg-[var(--bg-main)]" : "border-transparent bg-transparent"}`}>
       <div className="section-wrap flex h-full items-center justify-between gap-5">
         <a href="#home" className="group flex min-h-11 items-center gap-3 rounded-md" aria-label="Niel Arthur home">
-          <span className="brand-mark" aria-hidden="true">NA</span>
+          
           <span>
-            <span className="block text-sm font-semibold tracking-wide text-[var(--text-heading)] group-hover:text-[var(--accent)]">Niel Arthur</span>
-            <span className="block text-xs text-[var(--text-muted)]">Software · Data · Full Stack</span>
+            <span className="block text-xs text-[var(--text-muted)]">Software · Data · Full Stack Developer</span>
           </span>
         </a>
 
