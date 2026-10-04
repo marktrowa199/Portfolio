@@ -10,20 +10,21 @@ import Timeline from "@/components/timeline/Timeline";
 import ContributionActivity from "@/components/contributions/ContributionActivity";
 import Contact from "@/components/contact/Contact";
 import Footer from "@/components/footer/Footer";
+import ParticleField from "@/components/ParticleField";
 
 export default function Home() {
   return (
     <div
-      className="
+      className="portfolio-shell
         min-h-screen
         flex
         flex-col
-        bg-[var(--bg-main)]
         text-[var(--text-main)]
         transition-colors
         duration-300
       "
     >
+      <ParticleField />
       <Navbar />
 
       <main className="flex-grow">
