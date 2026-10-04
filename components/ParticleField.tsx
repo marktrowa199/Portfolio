@@ -24,6 +24,7 @@ export default function ParticleField() {
     let height = 0;
     let pixelRatio = 1;
     let lastTime = 0;
+    let themeBlend = root.classList.contains("light") ? 1 : 0;
 
     const resize = () => {
       width = window.innerWidth;
@@ -43,7 +44,7 @@ export default function ParticleField() {
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 0.22,
         vy: (Math.random() - 0.5) * 0.22,
-        radius: Math.random() * 1.15 + 0.65,
+        radius: Math.random() * 1.5 + 1.5,
       }));
     };
 
@@ -54,7 +55,13 @@ export default function ParticleField() {
       lastTime = time;
       context.clearRect(0, 0, width, height);
       const light = root.classList.contains("light");
-      const ink = light ? "15, 118, 110" : "94, 234, 212";
+      const targetThemeBlend = light ? 1 : 0;
+      themeBlend += (targetThemeBlend - themeBlend) * 0.055;
+      const darkInk = [94, 234, 212];
+      const lightInk = [15, 118, 110];
+      const ink = darkInk.map((channel, index) => Math.round(channel + (lightInk[index] - channel) * themeBlend)).join(", ");
+      const dotOpacity = 0.55 + 0.12 * themeBlend;
+      const lineOpacity = 0.16 + 0.06 * themeBlend;
       const reach = smallScreen.matches ? 90 : 125;
       const reachSquared = reach * reach;
 
@@ -81,7 +88,7 @@ export default function ParticleField() {
 
         context.beginPath();
         context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        context.fillStyle = `rgba(${ink}, ${light ? 0.23 : 0.2})`;
+        context.fillStyle = `rgba(${ink}, ${dotOpacity})`;
         context.fill();
 
         for (let next = index + 1; next < particles.length; next += 1) {
@@ -90,7 +97,7 @@ export default function ParticleField() {
           const dy = particle.y - neighbor.y;
           const distanceSquared = dx * dx + dy * dy;
           if (distanceSquared >= 78 * 78) continue;
-          const alpha = (1 - Math.sqrt(distanceSquared) / 78) * (light ? 0.095 : 0.11);
+          const alpha = (1 - Math.sqrt(distanceSquared) / 78) * lineOpacity;
           context.strokeStyle = `rgba(${ink}, ${alpha})`;
           context.lineWidth = 0.7;
           context.beginPath();
