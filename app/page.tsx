@@ -1,6 +1,7 @@
 import Navbar from "@/components/navbar/Navbar";
 import ScrollReveal from "@/components/ScrollReveal";
 import Hero from "@/components/hero/Hero";
+import DinoDash from "@/components/dino/DinoDash";
 import About from "@/components/about/About";
 import TechnologyCarousel from "@/components/skills/TechnologyCarousel";
 import Certificates from "@/components/certificates/Certificates";
@@ -28,6 +29,7 @@ export default function Home() {
       <main className="flex-grow">
         <ScrollReveal />
         <Hero />
+        <DinoDash />
         <About />
         <Timeline />
         <Projects />
