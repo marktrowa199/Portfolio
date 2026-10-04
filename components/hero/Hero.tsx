@@ -42,15 +42,13 @@ export default function Hero() {
           </p>
          
           <p className="mt-2 text-base font-medium text-[var(--text-muted)] sm:text-lg">
-            Software development · AI · Data analytics · IT operations
+            Software development · AI · Data analytics · IT Operations
           </p>
           
           <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-[var(--text-muted)]">
-            I build practical technology projects across software, AI, and data — a Python and SQL
-            job-search assistant, an IoT crop-disease robot, and the day-to-day IT operations work
-            that keeps systems running. Currently a BSIT graduate from Our Lady of Fatima
-            University, looking for an Associate or Junior Software Engineer role where I can keep
-            learning and contribute to real engineering work.
+            BSIT graduate seeking an entry-level tech role. I have hands-on experience with Python, SQL, web
+            development, AI, data analytics, and IT operations. I’m curious about how things work, willing to learn,
+            and open to opportunities where I can contribute and grow.
           </p>
            
           <div className="mt-7 flex flex-wrap items-center gap-3">
