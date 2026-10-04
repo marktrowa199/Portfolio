@@ -24,8 +24,13 @@ type ProjectScreenshotProps = {
  * Width and height are the source's intrinsic pixels, and the stylesheet forces
  * `height: auto` at every breakpoint, so the browser preserves the original aspect
  * ratio and never crops. If the file is missing the component falls back to a neutral
- * panel rather than showing a broken image. Otherwise the whole frame is one button that
- * opens the shared lightbox, so every project image behaves identically.
+ * panel rather than showing a broken image.
+ *
+ * The frame *is* the button rather than wrapping one in a div, so the border and its
+ * padding are part of the hit area: hovering and clicking anywhere in the picture opens the
+ * viewer. One click is the whole interaction — the viewer opens on the fitted image, which
+ * is the full-size view, so there is no second control to reach for. Every project image
+ * renders this same component, so the behaviour cannot drift between them.
  */
 export default function ProjectScreenshot({
   src,
@@ -56,29 +61,31 @@ export default function ProjectScreenshot({
   const image: LightboxImage = { src, alt, width, height };
 
   return (
-    <div className={`project-shot${portrait ? " project-shot--portrait" : ""}`}>
-      <button
-        type="button"
-        className="project-shot__trigger"
-        onClick={() => openImage(gallery && gallery.length > 0 ? gallery : [image], galleryIndex)}
-        aria-label={`Open a larger view of ${alt}`}
-      >
-        {/* The button already names the image, so the inner img stays decorative and the
-            description is not announced twice. */}
-        <Image
-          src={src}
-          alt=""
-          width={width}
-          height={height}
-          sizes={portrait ? "(min-width: 768px) 15rem, (min-width: 640px) 14rem, 88vw" : "(min-width: 1024px) 44rem, (min-width: 640px) 60vw, 92vw"}
-          className="project-shot__img"
-          onError={() => setFailed(true)}
-          priority={false}
-        />
-        <span className="project-shot__zoom" aria-hidden="true">
-          <ZoomIn className="h-4 w-4" />
-        </span>
-      </button>
-    </div>
+    <button
+      type="button"
+      className={`project-shot project-shot__trigger${portrait ? " project-shot--portrait" : ""}`}
+      onClick={() => openImage(gallery && gallery.length > 0 ? gallery : [image], galleryIndex)}
+      aria-label={`Open a larger view of ${alt}`}
+    >
+      {/* The button already names the image, so the inner img stays decorative and the
+          description is not announced twice. */}
+      <Image
+        src={src}
+        alt=""
+        width={width}
+        height={height}
+        sizes={portrait ? "(min-width: 768px) 15rem, (min-width: 640px) 14rem, 88vw" : "(min-width: 1024px) 44rem, (min-width: 640px) 60vw, 92vw"}
+        className="project-shot__img"
+        onError={() => setFailed(true)}
+        priority={false}
+        // The thumbnail is what the visitor scrolls past, and the full-size bytes the
+        // viewer needs are warmed separately by `ImagePreload`. Asking this element for
+        // high priority as well would only duplicate that work at first paint.
+        fetchPriority="low"
+      />
+      <span className="project-shot__zoom" aria-hidden="true">
+        <ZoomIn className="h-4 w-4" />
+      </span>
+    </button>
   );
 }

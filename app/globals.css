@@ -245,10 +245,11 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .project-shot:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); transform: translateY(-1px); }
 .project-shot__img { display: block; width: 100%; height: auto; border-radius: 7px; }
 .project-shot--portrait .project-shot__img { width: auto; max-width: 100%; max-height: 15rem; margin-inline: auto; object-fit: contain; }
-/* The whole frame is one button that opens the shared lightbox, so every project image
-   behaves the same way. Resetting the button surface keeps the existing frame untouched. */
-.project-shot__trigger { position: relative; display: block; width: 100%; cursor: zoom-in; }
-.project-shot--portrait .project-shot__trigger { width: fit-content; max-width: 100%; margin-inline: auto; }
+/* The frame itself is the button, so the border and its padding are clickable too and not
+   just the pixels of the image. The button surface is reset back to the plain frame the
+   design already had, and the portrait caption keeps its full-width frame with the image
+   centred inside it via `margin-inline: auto` on `.project-shot__img`. */
+.project-shot__trigger { position: relative; display: block; width: 100%; margin: 0; appearance: none; -webkit-appearance: none; text-align: left; font: inherit; color: inherit; cursor: zoom-in; }
 .project-shot__zoom { position: absolute; right: .55rem; bottom: .55rem; display: grid; width: 2rem; height: 2rem; place-items: center; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-main); color: var(--text-muted); opacity: 0; transform: translateY(4px); transition: opacity 180ms ease, transform 180ms ease, color 180ms ease, border-color 180ms ease; }
 .project-shot__trigger:hover .project-shot__zoom,
 .project-shot__trigger:focus-visible .project-shot__zoom { border-color: var(--accent); color: var(--accent); opacity: 1; transform: none; }
@@ -386,7 +387,11 @@ a, button { -webkit-tap-highlight-color: transparent; }
    The stage keeps its own neutral mat so photographs read the same in either theme. */
 .lightbox { position: fixed; inset: 0; z-index: 70; display: flex; align-items: center; justify-content: center; padding: clamp(.6rem, 2.5vw, 2.5rem); background: rgb(2 6 23 / 0%); transition: background-color 260ms ease; }
 .lightbox[data-state="open"] { background: rgb(2 6 23 / 88%); }
-.lightbox__panel { display: flex; width: 100%; max-width: 80rem; max-height: 100%; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); box-shadow: 0 28px 64px -34px rgb(0 0 0 / 72%); opacity: 0; transform: scale(.97) translateY(8px); transition: opacity 240ms cubic-bezier(.16, 1, .3, 1), transform 260ms cubic-bezier(.16, 1, .3, 1); }
+/* `height` is load-bearing, not decoration. The image is absolutely positioned, so it adds no
+   height of its own: with only `max-height` here the panel collapsed to its header, the
+   stage resolved to zero, and the preview rendered 1254x0 — present in the DOM, invisible on
+   screen. A definite height is what gives the stage something to divide up. */
+.lightbox__panel { display: flex; width: 100%; max-width: 80rem; height: 100%; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); box-shadow: 0 28px 64px -34px rgb(0 0 0 / 72%); opacity: 0; transform: scale(.97) translateY(8px); transition: opacity 240ms cubic-bezier(.16, 1, .3, 1), transform 260ms cubic-bezier(.16, 1, .3, 1); }
 .lightbox[data-state="open"] .lightbox__panel { opacity: 1; transform: none; }
 .lightbox__header { display: flex; min-height: 3.5rem; flex: 0 0 auto; align-items: center; gap: .9rem; border-bottom: 1px solid var(--border); padding: .6rem .6rem .6rem 1rem; }
 .lightbox__title { min-width: 0; flex: 1 1 auto; overflow: hidden; color: var(--text-heading); font-size: .92rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
@@ -398,12 +403,27 @@ a, button { -webkit-tap-highlight-color: transparent; }
 /* `fill` resolves against the nearest positioned ancestor, so the fitted image needs its
    own box: that keeps the stage's padding honoured and the letterboxing honest. */
 .lightbox__canvas { position: relative; display: flex; min-width: 0; min-height: 0; flex: 1 1 auto; }
-.lightbox__stage.is-zoomed { display: block; overflow: auto; overscroll-behavior: contain; cursor: zoom-out; scrollbar-color: var(--border) transparent; }
 .lightbox__img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; opacity: 0; transition: opacity 220ms ease; user-select: none; -webkit-user-drag: none; }
 .lightbox__img.is-ready { opacity: 1; }
-.lightbox__stage.is-zoomed .lightbox__img { max-width: none; max-height: none; }
+/* Set when the bytes were already in hand (see `INSTANT_REVEAL_MS`), so the preview is
+   painted at full opacity on its first frame rather than fading up over 220ms. Only a
+   genuinely slow load keeps the fade. */
+.lightbox__img.is-instant { transition: none; }
 .lightbox__spinner { position: absolute; top: 50%; left: 50%; width: 2rem; height: 2rem; margin: -1rem 0 0 -1rem; border: 2px solid rgb(148 163 184 / 28%); border-top-color: var(--accent); border-radius: 50%; animation: lightbox-spin 700ms linear infinite; }
-.lightbox__footer { display: flex; min-height: 3.35rem; flex: 0 0 auto; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem; border-top: 1px solid var(--border); padding: .55rem .75rem; }
+/* Shown in place of the image when the request fails, so the stage never sits empty or
+   spins indefinitely. */
+.lightbox__error { margin: auto; max-width: 24rem; color: var(--text-muted); font-size: .88rem; line-height: 1.5; text-align: center; }
+
+/* Cache warmers for the shared viewer. These are real <img> elements, because only a real
+   image request populates the HTTP cache the viewer later reads from, but they must never be
+   seen, measured, or scrolled to. Clipped to a 1px box rather than moved off-screen with a
+   negative offset: `position: absolute` needs no positioned ancestor here, and nothing can
+   introduce a stray scrollbar the way a far-left offset can. `pointer-events: none` keeps
+   them out of hit-testing, and the wrapper is `aria-hidden` so they are not announced. */
+.image-preload { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); pointer-events: none; }
+.image-preload__img { display: block; width: 1px; height: 1px; }
+/* Rendered only for multi-image galleries, so a single image gets no footer at all. */
+.lightbox__footer { display: flex; min-height: 3.35rem; flex: 0 0 auto; align-items: center; justify-content: center; gap: .6rem; border-top: 1px solid var(--border); padding: .55rem .75rem; }
 .lightbox__pager { display: flex; align-items: center; gap: .5rem; }
 .lightbox__action { display: inline-flex; min-height: 2.6rem; align-items: center; justify-content: center; gap: .45rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-soft); padding: .5rem .85rem; color: var(--text-heading); font-size: .85rem; font-weight: 600; line-height: 1.2; transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease; }
 .lightbox__action:hover { border-color: var(--accent); color: var(--accent); }
@@ -414,8 +434,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
   /* Full-bleed viewer on phones: no scrim to tap, so the header X and Escape close it. */
   .lightbox { padding: 0; }
   .lightbox__panel { border-radius: 0; border-inline: 0; }
-  .lightbox__footer { flex-direction: column; align-items: stretch; }
-  .lightbox__footer > .lightbox__action { width: 100%; }
+  .lightbox__pager { width: 100%; }
   .lightbox__pager .lightbox__action { flex: 1 1 0; }
 }
 @media (prefers-reduced-motion: reduce) {

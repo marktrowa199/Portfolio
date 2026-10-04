@@ -2,6 +2,7 @@
 
 import { ExternalLink, Github } from "lucide-react";
 import { ImageLightboxProvider, type LightboxImage } from "@/components/ui/ImageLightbox";
+import ImagePreload from "@/components/ui/ImagePreload";
 import ProjectScreenshot from "./ProjectScreenshot";
 
 type ProjectImage = LightboxImage;
@@ -116,6 +117,19 @@ const projects: Project[] = [
   },
 ];
 
+/**
+ * Every image the viewer can open, in one flat list.
+ *
+ * The viewer is a page-wide singleton, so its preload set is built from all projects rather
+ * than per card. That keeps the behaviour identical for every image in the section — the
+ * first project and the last get the same instant open — instead of only the images that
+ * happen to sit in the first card rendered.
+ */
+const ALL_PROJECT_IMAGES: ProjectImage[] = projects.flatMap((project) => [
+  ...(project.screenshot ? [project.screenshot] : []),
+  ...(project.gallery ?? []),
+]);
+
 function ProjectGallery({ label, images }: { label: string; images: ProjectImage[] }) {
   return (
     <div className="project-gallery">
@@ -205,6 +219,7 @@ export default function Projects() {
   return (
     <ImageLightboxProvider>
       <section id="projects" data-scroll-reveal className="section-space scroll-mt-20 border-t border-[var(--border)]">
+        <ImagePreload images={ALL_PROJECT_IMAGES} className="image-preload" />
         <div className="section-wrap">
           <div className="section-head">
             <div>

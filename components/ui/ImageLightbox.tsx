@@ -14,7 +14,7 @@ import {
   type TouchEvent,
 } from "react";
 import { createPortal } from "react-dom";
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 /** One image the viewer can display. `width`/`height` are the source's intrinsic pixels. */
 export type LightboxImage = {
@@ -31,6 +31,17 @@ type LightboxContextValue = {
   openImage: (images: LightboxImage[], startIndex?: number) => void;
 };
 
+/**
+ * The `sizes` the fitted image renders at.
+ *
+ * The panel is capped at `80rem` by `.lightbox__panel` and is otherwise as wide as the
+ * viewport, so this describes the real display width. It is exported because anything that
+ * preloads these images has to pass the identical string: `sizes` is what the browser uses
+ * to pick a candidate out of the `srcset`, so any mismatch means a different optimizer URL,
+ * a cache miss, and the slow preview this is meant to avoid.
+ */
+export const LIGHTBOX_SIZES = "(min-width: 1280px) 80rem, 96vw";
+
 const LightboxContext = createContext<LightboxContextValue | null>(null);
 
 /** Access the page's shared image viewer. Throws when used outside the provider. */
@@ -44,6 +55,13 @@ export function useImageLightbox() {
 
 /** Must match the fade duration in `.lightbox__panel` so close never cuts off early. */
 const TRANSITION_MS = 260;
+/**
+ * How quickly an image has to arrive for it to be shown without a fade.
+ *
+ * Well under the 220ms `.lightbox__img` transition it replaces, so a preloaded image lands
+ * at full opacity instead of spending a noticeable moment semi-transparent.
+ */
+const INSTANT_REVEAL_MS = 120;
 /** Minimum horizontal travel, in px, that counts as a swipe rather than a stray tap. */
 const SWIPE_THRESHOLD = 48;
 
@@ -53,19 +71,40 @@ const prefersReducedMotion = () =>
 
 /**
  * Renders one image viewer for the whole page and hands every descendant image the same
- * open/zoom/close behaviour, so no two images can drift apart in how they behave.
+ * open/page/close behaviour, so no two images can drift apart in how they behave.
+ *
+ * There is no zoom: the viewer always shows the image fitted to the stage, which is the
+ * full-size view a click is expected to open. A second "Actual size" control would only ask
+ * for pixels the panel cannot show, and it made opening an image a two-step action.
  */
 export function ImageLightboxProvider({ children }: { children: ReactNode }) {
   const [gallery, setGallery] = useState<LightboxImage[] | null>(null);
   const [index, setIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [isZoomed, setIsZoomed] = useState(false);
   const [loadedSrc, setLoadedSrc] = useState<string | null>(null);
+  const [instantSrc, setInstantSrc] = useState<string | null>(null);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const unmountTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchStartX = useRef<number | null>(null);
+  const imageRef = useRef<HTMLImageElement | null>(null);
+  const requestedAt = useRef(0);
+
+  /**
+   * Records that an image is usable, and whether it arrived fast enough to skip the fade.
+   *
+   * `ImagePreload` fetches these bytes ahead of the click, so the common case is an image
+   * that is already decoded when the viewer mounts. Fading that up from zero opacity over
+   * 220ms is pure delay: it reads as "the image is still loading" for the whole second and
+   * a half of a preview that is in fact ready. Past this budget the fade is kept, because
+   * that genuinely is a slow load and easing it in beats flashing an empty frame.
+   */
+  const markLoaded = useCallback((src: string) => {
+    setLoadedSrc(src);
+    if (performance.now() - requestedAt.current < INSTANT_REVEAL_MS) setInstantSrc(src);
+  }, []);
 
   const openImage = useCallback((images: LightboxImage[], startIndex = 0) => {
     if (images.length === 0) return;
@@ -74,16 +113,17 @@ export function ImageLightboxProvider({ children }: { children: ReactNode }) {
       unmountTimer.current = null;
     }
     returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    requestedAt.current = performance.now();
+    setInstantSrc(null);
+    setFailedSrc(null);
     setGallery(images);
     setIndex(Math.min(Math.max(startIndex, 0), images.length - 1));
-    setIsZoomed(false);
     setIsOpen(true);
   }, []);
 
   const close = useCallback(() => setIsOpen(false), []);
 
   const step = useCallback((delta: number) => {
-    setIsZoomed(false);
     setIndex((current) => {
       const total = gallery?.length ?? 0;
       if (total < 2) return current;
@@ -113,7 +153,6 @@ export function ImageLightboxProvider({ children }: { children: ReactNode }) {
       unmountTimer.current = null;
       setGallery(null);
       setIndex(0);
-      setIsZoomed(false);
       returnFocusRef.current?.focus();
     }, prefersReducedMotion() ? 0 : TRANSITION_MS);
     return () => {
@@ -189,8 +228,7 @@ export function ImageLightboxProvider({ children }: { children: ReactNode }) {
   };
 
   const handleTouchStart = (event: TouchEvent<HTMLElement>) => {
-    // While zoomed the stage is a scroll surface, so a drag there is a pan, not a swipe.
-    touchStartX.current = isZoomed ? null : (event.touches[0]?.clientX ?? null);
+    touchStartX.current = event.touches[0]?.clientX ?? null;
   };
 
   const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
@@ -204,7 +242,20 @@ export function ImageLightboxProvider({ children }: { children: ReactNode }) {
   };
 
   const current = gallery?.[index];
-  const isReady = Boolean(current) && loadedSrc === current?.src;
+  const isFailed = Boolean(current) && failedSrc === current?.src;
+  // A failed load must never look like a slow one: without this the spinner would keep
+  // turning forever over a request that is never going to arrive.
+  const isReady = Boolean(current) && !isFailed && loadedSrc === current?.src;
+  const isInstant = Boolean(current) && instantSrc === current?.src;
+
+  // An image restored from cache can finish before React's first paint of it, in which case
+  // the load event is the only thing that would ever report it ready. Checking `complete`
+  // here covers that path so the preview can never be left stuck behind its spinner.
+  useEffect(() => {
+    const img = imageRef.current;
+    if (!current || !img) return;
+    if (img.complete && img.naturalWidth > 0) markLoaded(current.src);
+  }, [current, markLoaded]);
 
   // Memoised so the context value only changes identity when `openImage` does; paging
   // through a gallery then re-renders the viewer alone, not every trigger button.
@@ -238,57 +289,40 @@ export function ImageLightboxProvider({ children }: { children: ReactNode }) {
             </div>
 
             <div
-              className={`lightbox__stage${isZoomed ? " is-zoomed" : ""}`}
-              tabIndex={isZoomed ? 0 : -1}
+              className="lightbox__stage"
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
-              {isZoomed ? (
-                /* Actual size: the unoptimised source at its own pixels, inside a stage
-                   that scrolls. */
-                <Image
-                  key={`${current.src}-zoom`}
-                  src={current.src}
-                  alt={current.alt}
-                  width={current.width}
-                  height={current.height}
-                  unoptimized
-                  draggable={false}
-                  className="lightbox__img is-ready"
-                />
-              ) : (
-                /* Fitted: `fill` sizes the element to the canvas, and object-fit keeps
-                   the photo whole instead of cropping it to the panel. */
-                <div className="lightbox__canvas">
-                  <Image
-                    key={current.src}
-                    src={current.src}
-                    alt={current.alt}
-                    fill
-                    objectFit="contain"
-                    sizes="100vw"
-                    priority
-                    draggable={false}
-                    className={`lightbox__img${isReady ? " is-ready" : ""}`}
-                    onLoad={() => setLoadedSrc(current.src)}
-                  />
-                  {!isReady && <span className="lightbox__spinner" aria-hidden="true" />}
-                </div>
-              )}
+              {/* Fitted: `fill` sizes the element to the canvas, and object-fit keeps the
+                  photo whole instead of cropping it to the panel. `sizes` matches
+                  `ImagePreload` exactly, so the bytes were fetched before the click. */}
+              <div className="lightbox__canvas">
+                {isFailed ? (
+                  <p className="lightbox__error" role="alert">This image could not be loaded.</p>
+                ) : (
+                  <>
+                    <Image
+                      key={current.src}
+                      ref={imageRef}
+                      src={current.src}
+                      alt={current.alt}
+                      fill
+                      objectFit="contain"
+                      sizes={LIGHTBOX_SIZES}
+                      priority
+                      draggable={false}
+                      className={`lightbox__img${isReady ? " is-ready" : ""}${isInstant ? " is-instant" : ""}`}
+                      onLoad={() => markLoaded(current.src)}
+                      onError={() => setFailedSrc(current.src)}
+                    />
+                    {!isReady && <span className="lightbox__spinner" aria-hidden="true" />}
+                  </>
+                )}
+              </div>
             </div>
 
-            <div className="lightbox__footer">
-              <button
-                type="button"
-                className="lightbox__action"
-                onClick={() => setIsZoomed((zoomed) => !zoomed)}
-                aria-pressed={isZoomed}
-              >
-                {isZoomed ? <Minimize2 aria-hidden="true" /> : <Maximize2 aria-hidden="true" />}
-                {isZoomed ? "Fit to screen" : "Actual size"}
-              </button>
-
-              {gallery && gallery.length > 1 && (
+            {gallery && gallery.length > 1 && (
+              <div className="lightbox__footer">
                 <div className="lightbox__pager">
                   <button
                     type="button"
@@ -307,8 +341,8 @@ export function ImageLightboxProvider({ children }: { children: ReactNode }) {
                     Next <ChevronRight aria-hidden="true" />
                   </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>,
         document.body,
