@@ -68,8 +68,7 @@ body {
 .portfolio-shell .hero-build { background-color: color-mix(in srgb, var(--bg-main) 76%, transparent); }
 .portfolio-shell #about,
 .portfolio-shell #certificates,
-.portfolio-shell #contact,
-.portfolio-shell .dino-section { background-color: color-mix(in srgb, var(--bg-raised) 76%, transparent); }
+.portfolio-shell #contact { background-color: color-mix(in srgb, var(--bg-raised) 76%, transparent); }
 
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-heading);
@@ -121,14 +120,15 @@ button:active:not(:disabled) { transform: translateY(1px); }
 button:disabled { cursor: not-allowed; }
 
 .hero-build { background: var(--bg-main); }
-.focus-sheet { width: 100%; max-width: 34rem; margin-inline: auto; padding: .25rem 0 .25rem clamp(1rem, 4vw, 2.5rem); border-left: 1px solid var(--border); }
-.focus-sheet__heading { margin-bottom: 1.15rem; color: var(--text-dim); font-size: .86rem; font-weight: 600; }
-.focus-sheet__list { display: grid; }
-.focus-sheet__list li { display: grid; grid-template-columns: .65rem minmax(0, .9fr) minmax(7rem, 1fr); align-items: baseline; gap: .8rem; padding: .9rem 0; border-top: 1px solid var(--border); }
-.focus-sheet__marker { width: .5rem; height: .5rem; align-self: center; border-radius: 2px; background: var(--accent); }
-.focus-sheet__list h2 { font-size: 1rem; font-weight: 600; letter-spacing: -.01em; }
-.focus-sheet__list p { color: var(--text-muted); font-size: .88rem; line-height: 1.4; }
-.focus-sheet__caption { margin-top: 1rem; color: var(--text-dim); font-size: .85rem; }
+
+/* Hero portrait. The large visual in the right column: it grows to fill the
+   column up to a comfortable cap, held at the photo's own 3:4 ratio so the face
+   is never cropped. The frame reserves its size before the bytes land, so the
+   hero never shifts as the portrait arrives. */
+.hero-photo { position: relative; width: min(100%, 15rem); flex: 0 0 auto; overflow: hidden; aspect-ratio: 3 / 4; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-soft); }
+.hero-photo__img { object-fit: cover; }
+@media (min-width: 640px) { .hero-photo { width: min(100%, 17rem); } }
+@media (min-width: 1024px) { .hero-photo { width: min(100%, 19rem); } }
 
 .quick-scan-heading { margin: 0 0 .75rem; color: var(--text-dim); font-size: .8rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
 .quick-scan-block { display: flex; min-height: 4.75rem; align-items: flex-start; gap: .75rem; border-top: 1px solid var(--border); padding: .8rem .25rem 0; }
@@ -472,9 +472,6 @@ button:disabled { cursor: not-allowed; }
 
 @media (max-width: 640px) {
   .section-wrap { width: min(100% - 2rem, 76rem); }
-  .focus-sheet { padding-left: 1rem; }
-  .focus-sheet__list li { grid-template-columns: .6rem minmax(0, 1fr); gap: .45rem .75rem; }
-  .focus-sheet__list p { grid-column: 2; margin-top: -.2rem; }
   .about-build-list { grid-template-columns: 1fr; }
   .about-build { min-height: 6rem; }
   .journey-brick { grid-template-columns: 5.75rem minmax(0, 1fr); gap: .55rem; }
@@ -502,243 +499,4 @@ button:disabled { cursor: not-allowed; }
 .contact-social-link:hover { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .contact-copy-button, .contact-social-link { transition: none; }
-}
-
-/* ---------------------------------------------------------------------------
-   Dino Dash
-
-   A compact runner that sits between the hero and the rest of the portfolio.
-   The game is drawn on a canvas, so everything here is chrome: the frame, the
-   score readout, and the overlay states. Ink for the canvas itself comes from
-   the --dino-* custom properties below, which keeps the artwork on-theme in
-   both themes without a second palette.
-   --------------------------------------------------------------------------- */
-
-.dino-section {
-  /* Two design tokens exist only for the game: the stage floor and the dino's
-     shadow tone. Everything else reuses the site palette. */
-  --dino-bg: var(--bg-soft);
-  --dino-shade: #0f766e;
-  --brick-green-shade: #286d55;
-  --accent-soft: #99f6e4;
-  padding-block: clamp(1.5rem, 2.6vw, 2.25rem);
-}
-
-.light .dino-section {
-  --dino-shade: #0b5f58;
-  --brick-green-shade: #1f5c48;
-  --accent-soft: #99f6e4;
-}
-
-.dino-section__head {
-  display: grid;
-  gap: .9rem 2.5rem;
-  margin-bottom: clamp(.8rem, 1.3vw, 1.05rem);
-  align-items: end;
-}
-
-@media (min-width: 900px) {
-  .dino-section__head { grid-template-columns: minmax(0, 1fr) minmax(0, 20rem); }
-}
-
-.dino-section__aside {
-  margin: 0;
-  border-left: 1px solid var(--border);
-  padding-left: clamp(1rem, 2vw, 1.5rem);
-  color: var(--text-dim);
-  font-size: .88rem;
-  line-height: 1.6;
-}
-
-/* Capped and centred so the game reads as a self-contained widget rather than a
-   full-width banner. The stage's aspect ratio is fixed, so the visible world is
-   identical at any card width -- narrowing the card changes the layout only. */
-.dino-game {
-  max-width: 62rem;
-  margin-inline: auto;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-main);
-  padding: clamp(.6rem, 1vw, .85rem);
-}
-
-/* Shown only if the game island throws, so the portfolio never renders blank. */
-.dino-section__fallback {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--bg-main);
-  padding: clamp(1.25rem, 3vw, 2rem);
-  text-align: center;
-}
-.dino-section__fallback-title { color: var(--text-heading); font-weight: 650; }
-.dino-section__fallback-note { margin: .4rem 0 0; color: var(--text-dim); font-size: .88rem; }
-
-/* The readout sits above the stage rather than floating on it, so the score is
-   never painted over the dinosaurs and stays readable at any speed. */
-.dino-game__hud {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0 .25rem .4rem;
-  font-family: var(--font-code);
-}
-
-.dino-game__stat { display: inline-flex; align-items: baseline; gap: .45rem; }
-.dino-game__stat-label {
-  color: var(--text-dim);
-  font-size: .64rem;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-/* Tabular figures stop the score from shifting width as the digits change. */
-.dino-game__stat-value {
-  color: var(--text-heading);
-  font-size: .92rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: .02em;
-}
-.dino-game__stat--best .dino-game__stat-value { color: var(--accent); }
-
-.dino-stage {
-  position: relative;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--dino-bg);
-  aspect-ratio: 16 / 5;
-  /* The stage is a tap target, so it must not also select text or trigger the
-     browser's double-tap-to-zoom on touch devices. */
-  touch-action: manipulation;
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-@media (max-width: 639px) {
-  /* The aspect ratio sets how much road is visible, in world units: it is always
-     `ratio x WORLD_HEIGHT`. A taller phone ratio would show far less road than the
-     desktop stage and leave no time to read a cactus, so the phone stays letterboxed
-     and simply renders the same world smaller. */
-  .dino-stage { aspect-ratio: 5 / 2; }
-}
-
-.dino-stage__canvas { display: block; width: 100%; height: 100%; }
-
-.dino-stage__overlay {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: color-mix(in srgb, var(--dino-bg) 82%, transparent);
-  padding: .75rem;
-}
-
-.dino-stage__card { display: grid; justify-items: center; gap: .35rem; text-align: center; }
-
-.dino-stage__title {
-  color: var(--text-heading);
-  font-size: clamp(.9rem, 2.2vw, 1.05rem);
-  font-weight: 650;
-  letter-spacing: -.01em;
-}
-.dino-stage__score {
-  color: var(--text-muted);
-  font-family: var(--font-code);
-  font-size: .85rem;
-  font-variant-numeric: tabular-nums;
-}
-.dino-stage__score span { color: var(--accent); font-weight: 600; }
-.dino-stage__hint { color: var(--text-dim); font-size: .78rem; }
-.dino-stage__badge {
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-  padding: .1rem .5rem;
-  color: var(--accent);
-  font-family: var(--font-code);
-  font-size: .64rem;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-
-.dino-button {
-  display: inline-flex;
-  min-height: 2.25rem;
-  align-items: center;
-  justify-content: center;
-  margin-top: .25rem;
-  border: 0;
-  border-radius: 6px;
-  background: var(--accent);
-  padding: .45rem 1.15rem;
-  color: var(--accent-ink);
-  font-size: .84rem;
-  font-weight: 600;
-  transition: background-color 150ms ease, transform 150ms ease;
-}
-.dino-button:hover { background: var(--accent-strong); }
-.dino-button:active { transform: translateY(1px); }
-
-.dino-game__paused {
-  margin: .45rem 0 0;
-  color: var(--text-dim);
-  font-size: .78rem;
-}
-
-.dino-game__legend {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: .4rem 1.25rem;
-  margin: .5rem 0 0;
-  padding: 0 .25rem;
-  color: var(--text-dim);
-  font-size: .75rem;
-}
-
-.dino-game__keys { display: inline-flex; align-items: center; gap: .35rem; }
-.dino-game__keys kbd {
-  display: inline-flex;
-  min-width: 1.4rem;
-  height: 1.4rem;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border);
-  border-bottom-width: 2px;
-  border-radius: 5px;
-  background: var(--bg-soft);
-  padding: 0 .35rem;
-  color: var(--text-muted);
-  font-family: var(--font-code);
-  font-size: .65rem;
-  line-height: 1;
-}
-.dino-game__legend-note { color: var(--text-dim); }
-
-/* Screen-reader-only status text. The canvas carries its own label; this exists
-   so score and state changes are announced without a visible duplicate. */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-@media (max-width: 639px) {
-  .dino-game__legend-note { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* The run itself is opt-in play, not decoration, so it keeps moving. What is
-     removed is the incidental motion: entrance transitions and button nudges. */
-  .dino-button { transition: none; }
-  .dino-button:active { transform: none; }
-  .dino-stage__overlay { background: var(--dino-bg); }
 }

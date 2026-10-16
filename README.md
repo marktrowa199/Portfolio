@@ -53,8 +53,9 @@ portfolio/
 │   ├── footer/
 │   │   └── Footer.tsx            # Name, copyright, and back-to-top link
 │   ├── hero/
-│   │   ├── Hero.tsx              # Role, project CTA, and contact actions
-│   │   └── SignalCanvas.tsx      # Technical focus panel
+│   │   └── Hero.tsx              # Portrait frame, role, project CTA, and contact actions
+│   ├── image/
+│   │   └── siarthur.jpg          # Portrait shown in the hero's right column (3:4)
 │   ├── navbar/
 │   │   ├── Navbar.tsx            # Desktop/mobile navigation and resume preview
 │   │   └── ThemeToggle.tsx       # Sun/Moon theme switcher persisted in localStorage
@@ -83,6 +84,15 @@ portfolio/
 - **Email**: `arthurnielzz@gmail.com`
 - **Phone**: `(+63) 946-417-9851` · `(+63) 993-706-1214`
 - **Work Mode**: Open to Remote | On-site | Hybrid
+
+---
+
+## Personal photo
+
+The hero shows your portrait from `components/image/siarthur.jpg` in the right
+column (framed at 3:4 so the face is never cropped), with the mascot beside your
+name. Replace that file with a new photo — same portrait crop and it appears with
+no code changes.
 
 ---
 
