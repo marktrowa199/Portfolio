@@ -25,9 +25,9 @@ export default function Contact() {
   return (
     <section id="contact" data-scroll-reveal className="section-space scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-raised)]">
       <div className="section-wrap">
-        <p className="eyebrow">07 · Contact</p>
+        <p className="eyebrow">Contact</p>
         <h2 className="section-title mt-4">Let’s talk about the work.</h2>
-        <p className="section-intro mt-5">Interested in working together, discussing an opportunity, or simply want to connect? You can reach me through the contact details below.</p>
+        <p className="section-intro mt-5">Interested in an opportunity or collaboration? Reach me through the details below.</p>
 
         <div className="mt-8 grid gap-7 sm:grid-cols-2 lg:gap-10">
           <div className="min-w-0">

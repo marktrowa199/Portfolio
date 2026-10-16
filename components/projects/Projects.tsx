@@ -223,7 +223,7 @@ export default function Projects() {
         <div className="section-wrap">
           <div className="section-head">
             <div>
-              <p className="eyebrow">03 · Projects</p>
+              <p className="eyebrow">Projects</p>
               <h2 className="section-title mt-3">Two builds, from real work.</h2>
             </div>
             <p className="section-intro">A full-stack AI web app, and an IoT and computer-vision capstone.</p>

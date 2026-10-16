@@ -103,18 +103,14 @@ export default function Timeline() {
           one screen of scrolling instead of two. */}
       <div className="section-wrap grid items-start gap-8 lg:grid-cols-[1.15fr_1fr] lg:gap-10">
         <section id="experience" className="scroll-mt-20">
-          <p className="eyebrow">01 · Experience</p>
-          <h2 className="section-title mt-3">Experience</h2>
-          <p className="mt-2 text-sm text-[var(--text-dim)]">Work experience and hands-on project work.</p>
+          <h2 className="section-title">Experience</h2>
           <div className="mt-5">
             <MilestoneList items={experience} />
           </div>
         </section>
 
         <section id="education" className="scroll-mt-20">
-          <p className="eyebrow">02 · Education</p>
-          <h2 className="section-title mt-3">Education</h2>
-          <p className="mt-2 text-sm text-[var(--text-dim)]">Academic background.</p>
+          <h2 className="section-title">Education</h2>
           <div className="mt-5">
             <MilestoneList items={education} />
           </div>

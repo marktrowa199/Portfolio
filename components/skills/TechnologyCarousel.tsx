@@ -82,12 +82,11 @@ export default function TechnologyCarousel() {
       <div className="section-wrap">
         <div className="section-head">
           <div>
-            <p className="eyebrow">04 · Toolkit</p>
+            <p className="eyebrow">Skills</p>
             <h2 className="section-title mt-3">A toolkit shaped by what I’ve built.</h2>
           </div>
           <p className="section-intro">
-            The technologies used to build this portfolio, followed by the ones behind my projects. Hover to hold the
-            carousel still, or pause it below.
+            The technologies behind this portfolio and my projects.
           </p>
         </div>
 

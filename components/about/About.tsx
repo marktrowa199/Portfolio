@@ -14,10 +14,11 @@ export default function About() {
       <div className="section-wrap">
         <div className="grid gap-8 lg:grid-cols-[.92fr_1.08fr] lg:gap-12">
           <div>
-            <p className="eyebrow">00 · About</p>
+            <p className="eyebrow">About</p>
             <h2 className="section-title mt-3">An engineer who likes to build across disciplines.</h2>
             <p className="mt-4 max-w-[58ch] leading-relaxed text-[var(--text-muted)]">
-              I am a motivated Bachelor of Science in Information Technology graduate from Our Lady of Fatima University – Quezon City (2022–2026). My technical foundation brings together software development fundamentals, real-world infrastructure, and systems experience.
+              My technical foundation brings together software development fundamentals, real-world
+              infrastructure, and systems experience.
             </p>
           </div>
 

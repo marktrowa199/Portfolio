@@ -61,8 +61,7 @@ export default function ContributionActivity() {
       <div className="section-wrap">
         <div className="section-head">
           <div>
-            <p className="eyebrow">06 · GitHub Activity</p>
-            <h2 className="section-title mt-3">Contribution Activity</h2>
+            <h2 className="section-title">Contribution Activity</h2>
           </div>
           <p className="section-intro">Public activity on GitHub. Switch years, and hover any day for its date and count.</p>
         </div>

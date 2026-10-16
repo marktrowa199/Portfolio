@@ -115,7 +115,7 @@ export default function Navbar() {
         <a href="#home" className="group flex min-h-11 items-center gap-3 rounded-md" aria-label="Niel Arthur home">
           
           <span>
-            <span className="block text-xs text-[var(--text-muted)]">Software · Data · Full Stack Developer</span>
+            <span className="block text-xs text-[var(--text-muted)]">Software · Full Stack Developer</span>
           </span>
         </a>
 

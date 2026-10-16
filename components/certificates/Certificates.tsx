@@ -119,11 +119,10 @@ export default function Certificates() {
       <div className="section-wrap">
         <div className="section-head">
           <div>
-            <p className="eyebrow">05 · Certificates</p>
-            <h2 className="section-title mt-3">Certificates</h2>
+            <h2 className="section-title">Certificates</h2>
           </div>
           <p className="section-intro">
-            {certificates.length} completed courses, certifications, and learning events. Select any certificate to view it.
+            {certificates.length} completed courses, certifications, and learning events.
           </p>
         </div>
 
