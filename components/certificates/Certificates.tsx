@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 
 type Certificate = {
   title: string;
@@ -12,13 +12,15 @@ type Certificate = {
   issuerLogo?: string;
   issuerKind?: "text";
   file: string;
+  /** Featured credentials stay in the compact section preview. */
+  featured?: boolean;
 };
 
 const certificates: Certificate[] = [
-  { title: "AI Ready ASEAN Programme", issuer: "ASEAN Foundation", issuerLogo: "/certificate-issuers/aseanfoundation.png", file: "AI Ready ASEAN Programme_Certificate.pdf" },
-  { title: "CCNA: Switching, Routing, and Wireless Essentials", issuer: "Cisco Networking Academy", issuerLogo: "/certificate-issuers/cisco.svg", file: "CCNA_netacad.pdf" },
-  { title: "Cyber Threat Management", issuer: "Cisco Networking Academy", issuerLogo: "/certificate-issuers/cisco.svg", file: "Cyber_Threat_Management_certificate_nbrocacurva4013qc-student-fatima-edu-ph_ce33c3ba-7822-4257-a5f8-bfec59b81447.pdf" },
-  { title: "Data Science Essentials with Python", issuer: "Cisco Networking Academy · DICT–ITU DTC Initiative", issuerLogo: "/certificate-issuers/cisco.svg", file: "Data_Science_Essentials_with_Python_certificate_nbrocacurva4013qc-student-fatima-edu-ph_f9a03843-32d2-439d-b985-6319b9c8be1a.pdf" },
+  { title: "AI Ready ASEAN Programme", issuer: "ASEAN Foundation", issuerLogo: "/certificate-issuers/aseanfoundation.png", file: "AI Ready ASEAN Programme_Certificate.pdf", featured: true },
+  { title: "CCNA: Switching, Routing, and Wireless Essentials", issuer: "Cisco Networking Academy", issuerLogo: "/certificate-issuers/cisco.svg", file: "CCNA_netacad.pdf", featured: true },
+  { title: "Cyber Threat Management", issuer: "Cisco Networking Academy", issuerLogo: "/certificate-issuers/cisco.svg", file: "Cyber_Threat_Management_certificate_nbrocacurva4013qc-student-fatima-edu-ph_ce33c3ba-7822-4257-a5f8-bfec59b81447.pdf", featured: true },
+  { title: "Data Science Essentials with Python", issuer: "Cisco Networking Academy · DICT–ITU DTC Initiative", issuerLogo: "/certificate-issuers/cisco.svg", file: "Data_Science_Essentials_with_Python_certificate_nbrocacurva4013qc-student-fatima-edu-ph_f9a03843-32d2-439d-b985-6319b9c8be1a.pdf", featured: true },
   { title: "Data Science Essentials with Python", issuer: "Cisco Networking Academy · DICT–ITU DTC Initiative", issuerLogo: "/certificate-issuers/cisco.svg", file: "DataScienceEssentialswithPythonv120251016-31-zc0akd.pdf" },
   { title: "Introduction to GitHub Version Control", issuer: "Ethel Programming Computer Programming Services", issuerKind: "text", file: "Github_version_control.pdf" },
   { title: "The Internet of Things (IoT): Connecting the Future", issuer: "Ethel Programming Computer Programming Services", issuerKind: "text", file: "Gold-Blue-Modern-Achievement-Certificate-15 (1).pdf" },
@@ -34,9 +36,9 @@ const certificates: Certificate[] = [
   { title: "IT Specialist: Networking", issuer: "CertNexus", issuerLogo: "/certificate-issuers/certnexus.png", file: "NETWORKING_CERT.pdf" },
   { title: "Networking Devices and Initial Configuration", issuer: "Cisco Networking Academy", issuerLogo: "/certificate-issuers/cisco.svg", file: "Networking_Devices_and_Initial_Configuration_Badge.pdf" },
   { title: "Network Technician Career Path", issuer: "Cisco Networking Academy", issuerLogo: "/certificate-issuers/cisco.svg", file: "NetworkTechnicianCareerPathUpdate20250502-25-nebw6u.pdf" },
-  { title: "Security, Compliance, and Identity Fundamentals", issuer: "Microsoft", date: "July 2026", issuerLogo: "/certificate-issuers/microsoft.svg", file: "Niel Arthur B. Rocacurva.pdf" },
+  { title: "Security, Compliance, and Identity Fundamentals", issuer: "Microsoft", date: "July 2026", issuerLogo: "/certificate-issuers/microsoft.svg", file: "Niel Arthur B. Rocacurva.pdf", featured: true },
   { title: "Prompt Engineering with the OpenAI API", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Prompt Engineering with the OpenAI API.pdf" },
-  { title: "IT Specialist: Python", issuer: "CertNexus", issuerLogo: "/certificate-issuers/certnexus.png", file: "PYTHON_CERT.pdf" },
+  { title: "IT Specialist: Python", issuer: "CertNexus", issuerLogo: "/certificate-issuers/certnexus.png", file: "PYTHON_CERT.pdf", featured: true },
   { title: "Software Engineering Principles in Python", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Software Engineering Principles in Python.pdf" },
   { title: "Understanding Prompt Engineering", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Understanding Prompt Engineering.pdf" },
   { title: "Working with Hugging Face", issuer: "DataCamp", issuerLogo: "/certificate-issuers/datacamp.svg", file: "Working with Hugging Face.pdf" },
@@ -62,57 +64,45 @@ function CertificateIssuer({ certificate }: { certificate: Certificate }) {
   ) : null;
 }
 
-function useCertificatesPerPage() {
-  // Read once on mount, then track the breakpoint so the page size matches the
-  // column count the grid will actually render.
-  const [perPage, setPerPage] = useState(6);
+const featuredCertificates = certificates.filter((certificate) => certificate.featured);
 
-  useEffect(() => {
-    const query = window.matchMedia("(min-width: 1024px)");
-    const mobile = window.matchMedia("(max-width: 639px)");
-
-    const update = () => {
-      if (mobile.matches) setPerPage(2);
-      else if (query.matches) setPerPage(6);
-      else setPerPage(4);
-    };
-
-    update();
-    query.addEventListener("change", update);
-    mobile.addEventListener("change", update);
-    return () => {
-      query.removeEventListener("change", update);
-      mobile.removeEventListener("change", update);
-    };
-  }, []);
-
-  return perPage;
+function CertificateCard({ certificate, onSelect }: { certificate: Certificate; onSelect: (certificate: Certificate) => void }) {
+  return (
+    <button
+      className="certificate-card"
+      type="button"
+      onClick={() => onSelect(certificate)}
+      aria-label={`View certificate: ${certificate.title}, issued by ${certificate.issuer}`}
+    >
+      <span className="certificate-card__issuer-row">
+        <span className={`certificate-card__mark${certificate.issuer === "ASEAN Foundation" ? " certificate-card__mark--wide" : ""}`}><CertificateIssuer certificate={certificate} /></span>
+        <span className="certificate-card__issuer">{certificate.issuer}</span>
+      </span>
+      <span className="certificate-card__title">{certificate.title}</span>
+      {certificate.date && <span className="certificate-card__date">{certificate.date}</span>}
+      <span className="certificate-card__action">View certificate <span aria-hidden="true">↗</span></span>
+    </button>
+  );
 }
 
 export default function Certificates() {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const catalogRef = useRef<HTMLDialogElement>(null);
   const [selected, setSelected] = useState<Certificate | null>(null);
-  const perPage = useCertificatesPerPage();
-  const [page, setPage] = useState(0);
-  const gridRef = useRef<HTMLDivElement>(null);
-
-  const totalPages = Math.max(1, Math.ceil(certificates.length / perPage));
-  // Shrinking the viewport can leave the reader past the last page.
-  const safePage = Math.min(page, totalPages - 1);
-  const visible = certificates.slice(safePage * perPage, safePage * perPage + perPage);
-
-  // Returning to the top of the section keeps the new group in view on tall screens.
-  const goToPage = (next: number) => {
-    setPage(Math.max(0, Math.min(next, totalPages - 1)));
-    gridRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-  };
+  const [catalogOpen, setCatalogOpen] = useState(false);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (selected && dialog && !dialog.open) dialog.showModal();
   }, [selected]);
 
+  useEffect(() => {
+    const dialog = catalogRef.current;
+    if (catalogOpen && dialog && !dialog.open) dialog.showModal();
+  }, [catalogOpen]);
+
   const closeViewer = () => dialogRef.current?.close();
+  const closeCatalog = () => catalogRef.current?.close();
 
   return (
     <section id="certificates" data-scroll-reveal className="section-space scroll-mt-20 border-t border-[var(--border)] bg-[var(--bg-raised)]">
@@ -126,55 +116,49 @@ export default function Certificates() {
           </p>
         </div>
 
-        <div className="certificate-grid" ref={gridRef}>
-          {visible.map((certificate) => (
-            <button
-              className="certificate-card"
-              type="button"
-              key={certificate.file}
-              onClick={() => setSelected(certificate)}
-              aria-label={`View certificate: ${certificate.title}, issued by ${certificate.issuer}`}
-            >
-              <span className="certificate-card__issuer-row">
-                <span className={`certificate-card__mark${certificate.issuer === "ASEAN Foundation" ? " certificate-card__mark--wide" : ""}`}><CertificateIssuer certificate={certificate} /></span>
-                <span className="certificate-card__issuer">{certificate.issuer}</span>
-              </span>
-              <span className="certificate-card__title">{certificate.title}</span>
-              {certificate.date && <span className="certificate-card__date">{certificate.date}</span>}
-              <span className="certificate-card__action">View certificate <span aria-hidden="true">↗</span></span>
-            </button>
+        <div className="certificate-grid">
+          {featuredCertificates.map((certificate) => (
+            <CertificateCard key={certificate.file} certificate={certificate} onSelect={setSelected} />
           ))}
         </div>
 
-        {totalPages > 1 && (
-          <nav className="certificate-pager" aria-label="Certificate pages">
-            <button
-              type="button"
-              className="certificate-pager__button"
-              onClick={() => goToPage(safePage - 1)}
-              disabled={safePage === 0}
-            >
-              <ArrowLeft aria-hidden="true" className="h-4 w-4" /> Previous
-            </button>
-
-            <p className="certificate-pager__status" role="status" aria-live="polite">
-              <span className="certificate-pager__count">{safePage + 1} / {totalPages}</span>
-              <span className="certificate-pager__range">
-                Showing {safePage * perPage + 1}–{Math.min((safePage + 1) * perPage, certificates.length)} of {certificates.length}
-              </span>
-            </p>
-
-            <button
-              type="button"
-              className="certificate-pager__button"
-              onClick={() => goToPage(safePage + 1)}
-              disabled={safePage >= totalPages - 1}
-            >
-              Next <ArrowRight aria-hidden="true" className="h-4 w-4" />
-            </button>
-          </nav>
-        )}
+        <div className="section-actions">
+          <p className="section-actions__hint">
+            Showing {featuredCertificates.length} selected credentials of {certificates.length}. Open any card to read the certificate.
+          </p>
+          <button type="button" className="view-all-button" onClick={() => setCatalogOpen(true)}>
+            View all certificates <ArrowRight aria-hidden="true" />
+          </button>
+        </div>
       </div>
+
+      {catalogOpen && (
+        <dialog
+          className="catalog-dialog"
+          ref={catalogRef}
+          aria-labelledby="certificate-catalog-title"
+          onClose={() => setCatalogOpen(false)}
+          onClick={(event) => { if (event.target === event.currentTarget) closeCatalog(); }}
+        >
+          <div className="catalog-dialog__header">
+            <div className="min-w-0">
+              <p className="catalog-dialog__eyebrow">Certificates</p>
+              <h3 id="certificate-catalog-title" className="catalog-dialog__title">All certificates</h3>
+              <p className="catalog-dialog__meta">{certificates.length} credentials, certifications, and learning events.</p>
+            </div>
+            <button className="catalog-dialog__close" type="button" onClick={closeCatalog} aria-label="Close all certificates">
+              <X aria-hidden="true" className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="catalog-dialog__body">
+            <div className="certificate-catalog-grid">
+              {certificates.map((certificate) => (
+                <CertificateCard key={certificate.file} certificate={certificate} onSelect={setSelected} />
+              ))}
+            </div>
+          </div>
+        </dialog>
+      )}
 
       {selected && (
         <dialog

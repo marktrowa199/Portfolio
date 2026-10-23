@@ -210,7 +210,15 @@ button:disabled { cursor: not-allowed; }
 .tech-marquee__controls { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin-top: 1rem; }
 .tech-marquee__toggle { display: inline-flex; min-height: 2.5rem; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-main); padding: .5rem .9rem; color: var(--text-heading); font-size: .85rem; font-weight: 600; transition: border-color 150ms ease, color 150ms ease; }
 .tech-marquee__toggle:hover { border-color: var(--accent); color: var(--accent); }
-.tech-marquee__hint { color: var(--text-dim); font-size: .8rem; line-height: 1.5; }
+.tech-marquee__hint { min-width: 0; flex: 1 1 14rem; color: var(--text-dim); font-size: .8rem; line-height: 1.5; }
+.tech-marquee__controls .view-all-button { margin-left: auto; }
+
+.view-all-button { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: .45rem; border: 1px solid var(--accent); border-radius: 6px; background: color-mix(in srgb, var(--accent) 12%, var(--bg-main)); padding: .55rem 1rem; color: var(--accent); font-size: .85rem; font-weight: 650; line-height: 1.2; transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease; }
+.view-all-button:hover { border-color: var(--accent-strong); background: var(--accent); color: var(--accent-ink); }
+.view-all-button svg { width: 1rem; height: 1rem; flex: 0 0 auto; }
+
+.section-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.25rem; margin-top: 1.25rem; border-top: 1px solid var(--border); padding-top: 1rem; }
+.section-actions__hint { min-width: 0; flex: 1 1 22rem; color: var(--text-dim); font-size: .8rem; line-height: 1.5; }
 
 /* Reduced motion: no continuous movement at all. The duplicate group is hidden and
    the single real group wraps into a static, readable grid. The pause toggle is
@@ -220,7 +228,7 @@ button:disabled { cursor: not-allowed; }
   .tech-marquee__track { width: auto; animation: none; transform: none; }
   .tech-marquee__group { flex-wrap: wrap; padding-right: 0; }
   .tech-marquee__group[aria-hidden="true"] { display: none; }
-  .tech-marquee__controls { display: none; }
+  .tech-marquee__toggle { display: none; }
   .tech-card { min-width: 0; flex: 1 1 13rem; }
   .tech-card:hover { transform: none; }
 }
@@ -230,7 +238,8 @@ button:disabled { cursor: not-allowed; }
   .tech-card__name { font-size: .9rem; }
   .tech-card__note { font-size: .76rem; }
   .tech-marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.25rem, #000 calc(100% - 1.25rem), transparent); mask-image: linear-gradient(90deg, transparent, #000 1.25rem, #000 calc(100% - 1.25rem), transparent); }
-  .tech-marquee__toggle { flex: 1 1 auto; }
+  .tech-marquee__controls .view-all-button { margin-left: 0; flex: 1 1 auto; }
+  .tech-marquee__hint { flex-basis: 100%; order: 3; }
 }
 
 .journey-bricks { display: grid; gap: .5rem; }
@@ -290,7 +299,7 @@ button:disabled { cursor: not-allowed; }
 .project-block__header { min-height: 2.25rem; display: flex; align-items: center; gap: 1rem; padding: .55rem 1rem 0; color: var(--project-color); }
 /* The screenshot sits directly under the card's coloured top edge, so drop its own
    top corners to avoid a doubled radius. */
-.project-block > .project-shot { margin: .75rem clamp(.75rem, 2vw, 1rem) 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+.project-block > .project-shot { width: calc(100% - clamp(1.5rem, 4vw, 2rem)); margin: .75rem clamp(.75rem, 2vw, 1rem) 0; border-top-left-radius: 0; border-top-right-radius: 0; }
 .project-block__body { display: grid; gap: .85rem; padding: clamp(.8rem, 3vw, 1.1rem); }
 .project-block__tagline { margin-top: .4rem; color: var(--accent); font-size: .92rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.4; }
 .project-fact h4 { color: var(--text-dim); font-size: .72rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
@@ -350,8 +359,8 @@ button:disabled { cursor: not-allowed; }
 .contribution-skeleton-grid span:nth-child(5n) { animation-delay: .24s; }
 .contribution-error { display: flex; min-height: 8rem; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; color: var(--text-muted); }
 
-/* Six across on desktop, four on tablet, two on mobile — matched by the per-page
-   logic in Certificates.tsx so a page never leaves a ragged half-row. */
+/* A compact preview of six featured credentials; the complete collection opens in
+   the catalog dialog on request. */
 .certificate-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .85rem; }
 .certificate-card { display: flex; min-width: 0; min-height: 9.5rem; flex-direction: column; align-items: flex-start; gap: .7rem; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main); padding: .85rem; color: var(--text-main); text-align: left; transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease; }
 .certificate-card:hover { transform: translateY(-2px); border-color: var(--accent); background: var(--bg-raised); box-shadow: var(--shadow-block); }
@@ -361,28 +370,12 @@ button:disabled { cursor: not-allowed; }
 .certificate-issuer-logo { display: block; width: 1.6rem; height: 1.6rem; object-fit: contain; }
 .certificate-issuer-logo--wide { width: 4.3rem; height: 1.6rem; }
 .certificate-issuer-wordmark { color: #126b52; font-size: .5rem; font-weight: 750; letter-spacing: -.035em; line-height: 1.05; text-align: center; }
-.certificate-card__issuer { min-width: 0; color: var(--text-dim); font-size: .75rem; line-height: 1.3; }
-.certificate-card__title { color: var(--text-heading); font-size: .9rem; font-weight: 650; line-height: 1.35; text-wrap: pretty; }
+.certificate-card__issuer { min-width: 0; color: var(--text-dim); font-size: .75rem; line-height: 1.3; overflow-wrap: anywhere; }
+.certificate-card__title { color: var(--text-heading); font-size: .9rem; font-weight: 650; line-height: 1.35; overflow-wrap: anywhere; text-wrap: pretty; }
 .certificate-card__date { display: block; margin-top: -.4rem; color: var(--text-dim); font-size: .75rem; font-variant-numeric: tabular-nums; }
 .certificate-card__action { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: .5rem; margin-top: auto; border-top: 1px solid var(--border); padding-top: .75rem; color: var(--accent); font-size: .82rem; font-weight: 600; }
 .certificate-card__action span { font-size: 1rem; transition: transform 160ms ease; }
 .certificate-card:hover .certificate-card__action span { transform: translate(2px, -2px); }
-/* Certificate pager. Buttons keep a 44px minimum target so they stay comfortable
-   to tap on touch screens. */
-.certificate-pager { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1rem; margin-top: 1.25rem; border-top: 1px solid var(--border); padding-top: 1rem; }
-.certificate-pager__button { display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; gap: .45rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-main); padding: .6rem 1rem; color: var(--text-heading); font-size: .88rem; font-weight: 600; transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease; }
-.certificate-pager__button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-.certificate-pager__button:disabled { cursor: not-allowed; opacity: .4; }
-.certificate-pager__status { display: flex; min-width: 0; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: .3rem .6rem; text-align: center; }
-.certificate-pager__count { color: var(--text-heading); font-size: .88rem; font-weight: 650; font-variant-numeric: tabular-nums; }
-.certificate-pager__range { color: var(--text-dim); font-size: .78rem; font-variant-numeric: tabular-nums; }
-@media (max-width: 560px) {
-  .certificate-pager { justify-content: stretch; }
-  .certificate-pager__button { flex: 1 1 0; }
-  .certificate-pager__status { order: -1; width: 100%; }
-}
-@media (prefers-reduced-motion: reduce) { .certificate-pager__button { transition: none; } }
-
 .certificate-viewer { display: none; width: min(95vw, 76rem); height: min(94dvh, 68rem); max-width: 76rem; max-height: 94dvh; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); padding: 0; color: var(--text-main); }
 .certificate-viewer[open] { display: flex; }
 .certificate-viewer::backdrop { background: rgb(2 6 23 / 78%); }
@@ -395,6 +388,35 @@ button:disabled { cursor: not-allowed; }
 .certificate-viewer__document { width: 100%; min-height: 0; flex: 1 1 auto; border: 0; background: #e2e8f0; }
 .certificate-viewer__fallback { flex: 0 0 auto; border-top: 1px solid var(--border); padding: .65rem 1rem; color: var(--text-dim); font-size: .78rem; text-align: center; }
 .certificate-viewer__fallback a { color: var(--accent); text-underline-offset: 3px; }
+
+/* Shared catalog for the complete technology and certificate collections. It opens
+   only when requested, so the page itself stays short and scannable. */
+.catalog-dialog { display: none; width: min(95vw, 76rem); max-width: 76rem; max-height: min(90dvh, 60rem); flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); padding: 0; color: var(--text-main); }
+.catalog-dialog[open] { display: flex; }
+.catalog-dialog::backdrop { background: rgb(2 6 23 / 78%); }
+.catalog-dialog__header { display: flex; min-height: 4.75rem; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--border); padding: .9rem 1rem .9rem 1.25rem; }
+.catalog-dialog__eyebrow { color: var(--accent); font-size: .72rem; font-weight: 650; letter-spacing: .08em; line-height: 1.2; text-transform: uppercase; }
+.catalog-dialog__title { margin-top: .2rem; color: var(--text-heading); font-size: 1.05rem; font-weight: 650; line-height: 1.3; }
+.catalog-dialog__meta { margin-top: .15rem; color: var(--text-dim); font-size: .8rem; line-height: 1.4; }
+.catalog-dialog__close { display: grid; width: 2.75rem; height: 2.75rem; flex: 0 0 auto; place-items: center; border: 1px solid var(--border); border-radius: 7px; background: var(--bg-soft); color: var(--text-main); transition: border-color 150ms ease, color 150ms ease; }
+.catalog-dialog__close:hover { border-color: var(--accent); color: var(--accent); }
+.catalog-dialog__body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: clamp(1rem, 2.5vw, 1.5rem); }
+
+.tech-catalog-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+.tech-catalog-grid .tech-card { min-width: 0; height: 100%; }
+.certificate-catalog-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+
+@media (min-width: 640px) {
+  .tech-catalog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+  .certificate-catalog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; }
+}
+@media (min-width: 1024px) {
+  .tech-catalog-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .85rem; }
+  .certificate-catalog-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .85rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .catalog-dialog__close, .view-all-button { transition: none; }
+}
 
 /* Shared image lightbox. One viewer serves every project image: the scrim fades in while
    the panel rises a few pixels, and the image itself cross-fades once its bytes land.
@@ -456,15 +478,21 @@ button:disabled { cursor: not-allowed; }
   .lightbox__spinner { animation-duration: 1.6s; }
 }
 
-@media (max-width: 1023px) { .certificate-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 1023px) { .certificate-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width: 639px) {
   .project-shot--portrait .project-shot__img { max-height: 13rem; }
   .certificate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
   .certificate-card { min-height: 9rem; }
+  .certificate-card__mark--wide { width: 4rem; }
+  .certificate-issuer-logo--wide { width: 3.4rem; }
   .certificate-viewer { width: 100vw; height: 100dvh; max-height: 100dvh; border-radius: 0; }
   .certificate-viewer__header { min-height: 4.25rem; padding-inline: .8rem; }
   .certificate-viewer__title { font-size: .9rem; }
   .certificate-viewer__fallback { padding: .75rem .5rem; }
+  .catalog-dialog { width: 100vw; height: 100dvh; max-height: 100dvh; border: 0; border-radius: 0; }
+  .catalog-dialog__header { min-height: 4.25rem; padding: .8rem; }
+  .catalog-dialog__title { font-size: .98rem; }
+  .catalog-dialog__body { padding: .85rem; }
 }
 @media (prefers-reduced-motion: reduce) { .certificate-card, .certificate-card__action span { transition: none; } }
 @keyframes contribution-pulse { 50% { opacity: .55; } }
@@ -485,8 +513,11 @@ button:disabled { cursor: not-allowed; }
   .journey-company__logo { width: 7.5rem; min-height: 2.75rem; }
   .journey-brick__content h3 { font-size: .94rem; }
   .project-demo-link { width: 100%; justify-content: center; }
-  .certificate-grid { grid-template-columns: minmax(0, 1fr); }
+  .certificate-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .certificate-card { min-height: 8.75rem; }
+  .section-actions { align-items: stretch; }
+  .section-actions__hint { flex-basis: 100%; }
+  .section-actions .view-all-button { flex: 1 1 100%; }
   .contribution-panel { padding: clamp(.85rem, 4vw, 1.25rem); }
   .contribution-scroll { margin-inline: -.15rem; }
   .contribution-footer { align-items: flex-start; flex-direction: column; }

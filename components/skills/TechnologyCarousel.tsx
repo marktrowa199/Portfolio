@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
+  ArrowRight,
   Atom,
   Braces,
   Database,
@@ -16,6 +17,7 @@ import {
   Triangle,
   Type,
   Wind,
+  X,
   Zap,
 } from "lucide-react";
 
@@ -32,14 +34,16 @@ type Technology = {
   note: string;
   icon?: LucideIcon;
   monogram?: string;
+  /** Featured tools stay in the compact section preview; the full list lives in the dialog. */
+  featured?: boolean;
 };
 
 const technologies: Technology[] = [
   // The stack this portfolio itself is built with.
-  { name: "Next.js", note: "App Router, server rendering, API routes", monogram: "N" },
-  { name: "React", note: "Component state and effects", icon: Atom },
-  { name: "TypeScript", note: "Typed components and API handlers", icon: Braces },
-  { name: "Tailwind CSS", note: "Utility-first styling and responsive layout", icon: Wind },
+  { name: "Next.js", note: "App Router, server rendering, API routes", monogram: "N", featured: true },
+  { name: "React", note: "Component state and effects", icon: Atom, featured: true },
+  { name: "TypeScript", note: "Typed components and API handlers", icon: Braces, featured: true },
+  { name: "Tailwind CSS", note: "Utility-first styling and responsive layout", icon: Wind, featured: true },
   { name: "Lucide React", note: "Icon set used across the interface", icon: Feather },
   { name: "Google Fonts", note: "Poppins and JetBrains Mono", icon: Type },
   { name: "Git", note: "Branching and a readable project history", icon: GitBranch },
@@ -47,14 +51,16 @@ const technologies: Technology[] = [
   { name: "Vercel", note: "Deployment and preview builds", icon: Triangle },
 
   // Carried over from the project work.
-  { name: "Python", note: "Backend services, scripting, and data work", monogram: "Py" },
-  { name: "FastAPI", note: "Typed REST APIs for JobUp", icon: Zap },
+  { name: "Python", note: "Backend services, scripting, and data work", monogram: "Py", featured: true },
+  { name: "FastAPI", note: "Typed REST APIs for JobUp", icon: Zap, featured: true },
   { name: "Flask", note: "Lightweight Python web applications", icon: FlaskConical },
   { name: "OpenAI API", note: "Prompting and model calls in an app", icon: Sparkles },
   { name: "SQL", note: "Relational querying, joins, and reporting", icon: Table2 },
   { name: "PostgreSQL", note: "Relational hosting and query design", icon: Database },
   { name: "MySQL", note: "Database administration", icon: Server },
 ];
+
+const featuredTechnologies = technologies.filter((technology) => technology.featured);
 
 function TechCard({ technology }: { technology: Technology }) {
   const Icon = technology.icon;
@@ -76,6 +82,15 @@ export default function TechnologyCarousel() {
   // Manual pause, for touch users and keyboard users who cannot hover. Hover and
   // focus pause are handled in CSS so they cost no state.
   const [held, setHeld] = useState(false);
+  const [showAll, setShowAll] = useState(false);
+  const catalogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = catalogRef.current;
+    if (showAll && dialog && !dialog.open) dialog.showModal();
+  }, [showAll]);
+
+  const closeCatalog = () => catalogRef.current?.close();
 
   return (
     <section id="skills" data-scroll-reveal className="section-space scroll-mt-20">
@@ -93,7 +108,7 @@ export default function TechnologyCarousel() {
         <div className={`tech-marquee${held ? " tech-marquee--held" : ""}`}>
           <div className="tech-marquee__track">
             <ul className="tech-marquee__group">
-              {technologies.map((technology) => (
+              {featuredTechnologies.map((technology) => (
                 <TechCard key={technology.name} technology={technology} />
               ))}
             </ul>
@@ -101,7 +116,7 @@ export default function TechnologyCarousel() {
                 technology twice; the -50% keyframe step lands exactly one group
                 width across, so the loop has no visible seam. */}
             <ul className="tech-marquee__group" aria-hidden="true">
-              {technologies.map((technology) => (
+              {featuredTechnologies.map((technology) => (
                 <TechCard key={technology.name} technology={technology} />
               ))}
             </ul>
@@ -118,10 +133,41 @@ export default function TechnologyCarousel() {
             {held ? "Resume motion" : "Pause motion"}
           </button>
           <p className="tech-marquee__hint">
-            {technologies.length} technologies. Motion respects your system’s reduced-motion setting.
+            Showing {featuredTechnologies.length} core tools of {technologies.length}. Motion respects your reduced-motion setting.
           </p>
+          <button type="button" className="view-all-button" onClick={() => setShowAll(true)}>
+            View all technologies <ArrowRight aria-hidden="true" />
+          </button>
         </div>
       </div>
+
+      {showAll && (
+        <dialog
+          className="catalog-dialog"
+          ref={catalogRef}
+          aria-labelledby="technology-catalog-title"
+          onClose={() => setShowAll(false)}
+          onClick={(event) => { if (event.target === event.currentTarget) closeCatalog(); }}
+        >
+          <div className="catalog-dialog__header">
+            <div className="min-w-0">
+              <p className="catalog-dialog__eyebrow">Skills</p>
+              <h3 id="technology-catalog-title" className="catalog-dialog__title">All technologies</h3>
+              <p className="catalog-dialog__meta">The complete toolkit behind this portfolio and my projects.</p>
+            </div>
+            <button className="catalog-dialog__close" type="button" onClick={closeCatalog} aria-label="Close all technologies">
+              <X aria-hidden="true" className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="catalog-dialog__body">
+            <ul className="tech-catalog-grid">
+              {technologies.map((technology) => (
+                <TechCard key={technology.name} technology={technology} />
+              ))}
+            </ul>
+          </div>
+        </dialog>
+      )}
     </section>
   );
 }
