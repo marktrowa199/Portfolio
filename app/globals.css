@@ -176,7 +176,7 @@ button:disabled { cursor: not-allowed; }
   mask-image: linear-gradient(90deg, transparent, #000 3.5rem, #000 calc(100% - 3.5rem), transparent);
 }
 .tech-marquee__track { display: flex; width: max-content; animation: tech-marquee-scroll 70s linear infinite; will-change: transform; }
-.tech-marquee__group { display: flex; gap: .75rem; padding-right: .75rem; }
+.tech-marquee__group { display: flex; gap: .75rem; padding-right: .75rem; flex-wrap: nowrap; }
 
 @keyframes tech-marquee-scroll {
   from { transform: translate3d(0, 0, 0); }
@@ -226,10 +226,10 @@ button:disabled { cursor: not-allowed; }
 }
 
 @media (max-width: 639px) {
-  .tech-card { min-width: 11.5rem; padding: .7rem .8rem .75rem; }
+  .tech-card { min-width: 10.75rem; padding: .7rem .8rem .75rem; }
   .tech-card__name { font-size: .9rem; }
   .tech-card__note { font-size: .76rem; }
-  .tech-marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.75rem, #000 calc(100% - 1.75rem), transparent); mask-image: linear-gradient(90deg, transparent, #000 1.75rem, #000 calc(100% - 1.75rem), transparent); }
+  .tech-marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 1.25rem, #000 calc(100% - 1.25rem), transparent); mask-image: linear-gradient(90deg, transparent, #000 1.25rem, #000 calc(100% - 1.25rem), transparent); }
   .tech-marquee__toggle { flex: 1 1 auto; }
 }
 
@@ -255,7 +255,7 @@ button:disabled { cursor: not-allowed; }
 /* Project screenshot. The frame keeps a border, radius, and a soft lift on hover; the
    image itself is width-constrained with height:auto so the source aspect ratio holds
    and nothing is ever cropped or forced beyond the card. */
-.project-shot { margin: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main); padding: .4rem; transition: border-color 180ms ease, transform 180ms ease; }
+.project-shot { margin: 0; box-sizing: border-box; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-main); padding: .4rem; transition: border-color 180ms ease, transform 180ms ease; }
 .project-shot:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); transform: translateY(-1px); }
 .project-shot__img { display: block; width: 100%; height: auto; border-radius: 7px; }
 .project-shot--portrait .project-shot__img { width: auto; max-width: 100%; max-height: 15rem; margin-inline: auto; object-fit: contain; }
@@ -263,7 +263,7 @@ button:disabled { cursor: not-allowed; }
    just the pixels of the image. The button surface is reset back to the plain frame the
    design already had, and the portrait caption keeps its full-width frame with the image
    centred inside it via `margin-inline: auto` on `.project-shot__img`. */
-.project-shot__trigger { position: relative; display: block; width: 100%; margin: 0; appearance: none; -webkit-appearance: none; text-align: left; font: inherit; color: inherit; cursor: zoom-in; }
+.project-shot__trigger { position: relative; display: block; width: 100%; max-width: 100%; box-sizing: border-box; margin: 0; appearance: none; -webkit-appearance: none; text-align: left; font: inherit; color: inherit; cursor: zoom-in; }
 .project-shot__zoom { position: absolute; right: .55rem; bottom: .55rem; display: grid; width: 2rem; height: 2rem; place-items: center; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-main); color: var(--text-muted); opacity: 0; transform: translateY(4px); transition: opacity 180ms ease, transform 180ms ease, color 180ms ease, border-color 180ms ease; }
 .project-shot__trigger:hover .project-shot__zoom,
 .project-shot__trigger:focus-visible .project-shot__zoom { border-color: var(--accent); color: var(--accent); opacity: 1; transform: none; }
@@ -283,15 +283,15 @@ button:disabled { cursor: not-allowed; }
 .project-gallery__item { min-width: 0; margin: 0; }
 @media (min-width: 1024px) { .project-gallery__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
-.project-block { --project-color: var(--brick-blue); min-width: 0; overflow: hidden; border: 1px solid var(--border); border-top: 2px solid var(--project-color); border-radius: 12px; background: var(--bg-raised); box-shadow: var(--shadow-block); }
+.project-block { --project-color: var(--brick-blue); min-width: 0; max-width: 100%; overflow: hidden; border: 1px solid var(--border); border-top: 2px solid var(--project-color); border-radius: 12px; background: var(--bg-raised); box-shadow: var(--shadow-block); }
 .project-block--yellow { --project-color: var(--brick-yellow); }
 .project-block--red { --project-color: var(--brick-red); }
 .project-block--green { --project-color: var(--brick-green); }
 .project-block__header { min-height: 2.25rem; display: flex; align-items: center; gap: 1rem; padding: .55rem 1rem 0; color: var(--project-color); }
 /* The screenshot sits directly under the card's coloured top edge, so drop its own
    top corners to avoid a doubled radius. */
-.project-block > .project-shot { margin: .75rem 1rem 0; border-top-left-radius: 0; border-top-right-radius: 0; }
-.project-block__body { display: grid; gap: .85rem; padding: clamp(.9rem, 1.6vw, 1.1rem); }
+.project-block > .project-shot { margin: .75rem clamp(.75rem, 2vw, 1rem) 0; border-top-left-radius: 0; border-top-right-radius: 0; }
+.project-block__body { display: grid; gap: .85rem; padding: clamp(.8rem, 3vw, 1.1rem); }
 .project-block__tagline { margin-top: .4rem; color: var(--accent); font-size: .92rem; font-weight: 600; letter-spacing: -.01em; line-height: 1.4; }
 .project-fact h4 { color: var(--text-dim); font-size: .72rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
 .project-fact p, .project-fact li:not(.project-technology) { margin-top: .45rem; color: var(--text-muted); font-size: .9rem; line-height: 1.5; }
@@ -307,7 +307,7 @@ button:disabled { cursor: not-allowed; }
 .project-demo-link--primary { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); font-weight: 650; }
 .project-demo-link--primary:hover { border-color: var(--accent-strong); background: var(--accent-strong); color: var(--accent-ink); }
 .project-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 1rem; }
-@media (max-width: 767px) { .project-grid { grid-template-columns: minmax(0, 1fr); gap: .9rem; } }
+@media (max-width: 767px) { .project-grid { grid-template-columns: minmax(0, 1fr); gap: .8rem; } }
 
 .contribution-panel { min-height: 15rem; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-raised); padding: clamp(1rem, 3vw, 1.5rem); }
 .contribution-topline, .contribution-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -471,13 +471,25 @@ button:disabled { cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .contribution-skeleton-summary, .contribution-skeleton-grid span { animation: none; } }
 
 @media (max-width: 640px) {
-  .section-wrap { width: min(100% - 2rem, 76rem); }
+  .section-wrap { width: min(100% - 1.25rem, 76rem); }
+  .section-space { padding-block: clamp(2rem, 6vw, 2.75rem); }
+  .section-head { gap: .6rem 1.25rem; margin-bottom: clamp(1.25rem, 4vw, 1.6rem); }
+  .section-head > .section-intro { flex-basis: 100%; }
   .about-build-list { grid-template-columns: 1fr; }
-  .about-build { min-height: 6rem; }
-  .journey-brick { grid-template-columns: 5.75rem minmax(0, 1fr); gap: .55rem; }
-  .journey-brick__date { padding: .65rem; }
+  .about-build { min-height: 5.5rem; }
+  .journey-brick { grid-template-columns: 5.25rem minmax(0, 1fr); gap: .45rem; }
+  .journey-brick__date { padding: .55rem; }
+  .journey-brick__date p { font-size: .78rem; }
+  .journey-brick__date > span { font-size: .68rem; }
   .journey-company { align-items: flex-start; flex-direction: column; }
-  .journey-company__logo { width: 8rem; min-height: 3rem; }
+  .journey-company__logo { width: 7.5rem; min-height: 2.75rem; }
+  .journey-brick__content h3 { font-size: .94rem; }
+  .project-demo-link { width: 100%; justify-content: center; }
+  .certificate-grid { grid-template-columns: minmax(0, 1fr); }
+  .certificate-card { min-height: 8.75rem; }
+  .contribution-panel { padding: clamp(.85rem, 4vw, 1.25rem); }
+  .contribution-scroll { margin-inline: -.15rem; }
+  .contribution-footer { align-items: flex-start; flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
