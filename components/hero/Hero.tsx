@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Mascot } from "page-mascot";
-import portrait from "@/components/image/siarthur.jpg";
+import portrait from "@/components/image/arthurme.jpg";
 import { ArrowRight, Check, Copy, Github, GraduationCap, Linkedin, MapPin } from "lucide-react";
 
 /**
